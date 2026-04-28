@@ -1,0 +1,408 @@
+.secao {
+    display: flex;
+    min-height: 100vh;
+    background-color: #FFFFFF;
+}
+
+.conteudo {
+    flex: 1;
+    padding: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.tituloProjeto {
+    font-size: 28px;
+    font-weight: 700;
+    color: #222;
+    margin: 0 0 5px 0;
+}
+
+.desenvolvidoPor {
+    font-size: 16px;
+    color: #666;
+    margin: 0 0 25px 0;
+}
+
+.desenvolvidoPor a {
+    color: #167cbf;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.layoutDuasColunas {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 25px;
+    align-items: start;
+}
+
+.colunaEsquerda {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.colunaDireita {
+    position: sticky;
+    top: 20px;
+}
+
+.cardApoie {
+    background: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    border: 2px solid #eaeaea;
+}
+
+.pixTexto {
+    font-size: 14px;
+    color: #666;
+    margin: 10px 0;
+}
+
+.qrCodePlaceholder {
+    width: 150px;
+    height: 150px;
+    background: #f0f0f0;
+    margin: 15px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    color: #999;
+    font-size: 14px;
+    border: 2px dashed #ddd;
+}
+
+.dadosBancarios {
+    text-align: left;
+    line-height: 1.8;
+    font-size: 13px;
+    margin: 15px 0;
+}
+
+.dadosBancarios p {
+    margin: 5px 0;
+}
+
+.btnDoar {
+    width: 100%;
+    padding: 12px;
+    background-color: #167cbf;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.btnDoar:hover {
+    background-color: #0c598b;
+}
+
+.secaoBox {
+    background: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.descricao {
+    font-size: 15px;
+    color: #444;
+    line-height: 1.6;
+    margin-top: 10px;
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.infoLabel {
+    font-size: 11px;
+    color: #999;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.infoValor {
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+    margin: 3px 0 0 0;
+}
+
+.atualizacoesLista {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 3rem;
+}
+
+.atualizacao {
+    width: 15rem;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+}
+
+.attTitulo {
+    font-size: 20px;
+    font-weight: 800;
+    color: #333;
+    margin: 0 0 8px 0;
+    max-width: 15rem;
+}
+
+.attTexto {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+    margin: 0 0 10px 0;
+    font-weight: 300;
+}
+
+.attImagem {
+    width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.sobrenos {
+    color: black;
+    font-weight: 800;
+    font-size: 1.5rem;
+}
+
+.imagem {
+    width: 5rem;
+    height: 5rem;
+}
+
+.headerProjeto {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.imagem {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid #eaeaea;
+}
+
+/* Header da seção de atualizações com controles */
+.headerAtualizacoes {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Controles do carrossel */
+.controlesCarrossel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.botaoCarrossel {
+    background-color: #167cbf;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.botaoCarrossel:hover:not(:disabled) {
+    background-color: #0f5e94;
+    transform: scale(1.05);
+}
+
+.botaoCarrossel.desabilitado,
+.botaoCarrossel:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+}
+
+.paginaInfo {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+    min-width: 60px;
+    text-align: center;
+}
+
+/* Ajuste na lista de atualizações para exibir duas por linha */
+.atualizacoesLista {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 0;
+}
+
+/* Estilo dos cards de atualização */
+.atualizacao {
+    padding: 20px;
+    border: 1px solid #eaeaea;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.atualizacao:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.attTitulo {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 10px 0;
+    max-width: 10rem !important;
+}
+
+.attTexto {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+    margin: 0 0 12px 0;
+}
+
+.texto {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 0 !important;
+}
+
+.attImagem {
+    width: 100%;
+    height: 100% !important;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+/* Mensagem quando não há atualizações */
+.semAtualizacoes {
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    padding: 30px 0;
+}
+
+.sobrenos {
+    color: black;
+    font-weight: 800;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.descricao {
+    font-size: 15px;
+    color: #444;
+    line-height: 1.6;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .secao {
+        flex-direction: column;
+    }
+
+    .conteudo {
+        padding: 15px;
+    }
+
+    .layoutDuasColunas {
+        grid-template-columns: 1fr;
+    }
+
+    .colunaDireita {
+        position: relative;
+        top: 0;
+    }
+
+    .tituloProjeto {
+        font-size: 22px;
+    }
+
+    .infoGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .headerProjeto {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .headerAtualizacoes {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .controlesCarrossel {
+        align-self: flex-end;
+    }
+
+    .atualizacoesLista {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .botaoCarrossel {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
+
+    .paginaInfo {
+        font-size: 12px;
+        min-width: 50px;
+    }
+
+    .atualizacao {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .secao { flex-direction: column; }
+    .conteudo { padding: 15px; }
+    .layoutDuasColunas { grid-template-columns: 1fr; }
+    .colunaDireita { position: relative; top: 0; }
+    .tituloProjeto { font-size: 22px; }
+    .infoGrid { grid-template-columns: 1fr; }
+}

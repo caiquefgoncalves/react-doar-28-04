@@ -1,0 +1,177 @@
+* {
+    box-sizing: border-box;
+}
+
+.secao {
+    display: flex;
+    min-height: 100vh;
+    background-color: #FFFFFF;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.conteudo {
+    flex: 1;
+    padding: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.nome {
+    font-size: 28px;
+    font-weight: 700;
+    color: #222;
+    margin: 0 0 5px 0;
+}
+
+.descBreve {
+    font-size: 16px;
+    color: #666;
+    margin: 0 0 25px 0;
+}
+
+.layoutDuasColunas {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 25px;
+    align-items: start;
+}
+
+.colunaEsquerda {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.colunaDireita {
+    position: sticky;
+    top: 20px;
+}
+
+.cardApoie {
+    background: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    border: 2px solid #eaeaea;
+}
+
+.pixTexto {
+    font-size: 14px;
+    color: #666;
+    margin: 10px 0;
+}
+
+.qrCodePlaceholder {
+    width: 150px;
+    height: 150px;
+    background: #f0f0f0;
+    margin: 15px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    color: #999;
+    font-size: 14px;
+    border: 2px dashed #ddd;
+}
+
+.dadosBancarios {
+    text-align: left;
+    line-height: 1.8;
+    font-size: 13px;
+    margin: 15px 0;
+}
+
+.btnDoar {
+    width: 100%;
+    padding: 12px;
+    background-color: #167cbf;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.secaoBox {
+    background: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.descLonga {
+    font-size: 15px;
+    color: #444;
+    line-height: 1.6;
+    margin-top: 10px;
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.infoLabel {
+    font-size: 11px;
+    color: #999;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.infoValor {
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+    margin: 3px 0 0 0;
+}
+
+.projetosLista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.cardProjeto {
+    display: block;
+    padding: 15px 20px;
+    border-left: 3px solid #167cbf;
+    background-color: #f8f9fa;
+    border-radius: 0 8px 8px 0;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s;
+}
+
+.cardProjeto:hover { background-color: #eef4f8; }
+
+.cardProjeto h3 { font-size: 16px; font-weight: 700; color: #333; margin: 0 0 5px 0; }
+.cardProjeto p { font-size: 14px; color: #666; margin: 0 0 5px 0; }
+.tipoAjuda { font-size: 12px; color: #167cbf; font-weight: 600; }
+
+.atualizacoesLista { display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
+.atualizacao { padding: 15px; border-left: 3px solid #167cbf; background-color: #f8f9fa; border-radius: 0 8px 8px 0; }
+.attTitulo { font-size: 16px; font-weight: 700; color: #333; margin: 0 0 8px 0; }
+.attTexto { font-size: 14px; color: #555; line-height: 1.5; margin: 0 0 10px 0; }
+.attImagem { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; margin-top: 10px; }
+
+
+
+@media (max-width: 768px) {
+    .secao { flex-direction: column; }
+    .conteudo { padding: 15px; }
+    .layoutDuasColunas { grid-template-columns: 1fr; }
+    .colunaDireita { position: relative; top: 0; }
+    .nome { font-size: 22px; }
+    .infoGrid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,334 @@
+.secao{
+    display: flex;
+    align-items: flex-start;
+    gap: 7rem;
+}
+
+.menulateral{
+    display: flex;
+
+
+}
+
+.conteudo{
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+
+}
+.acoes{
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.cards{
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+
+    align-items: center;
+}
+
+.titulos{
+    margin: 0
+}
+
+/* Paginação */
+.paginacao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.botaoPagina {
+    background-color: #167cbf;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.botaoPagina:hover {
+    background-color: #0c598b;
+}
+
+.botaoPagina:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.paginaInfo {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+/* Menu lateral fixo */
+.menulateral {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+/* Grid de cards do ADM - LADO A LADO */
+.cardsAdm {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.cardsAdm > p {
+    width: 100%;
+}
+
+/* Card ADM */
+.cardAdm {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    width: 220px;
+    min-width: 200px;
+    flex-shrink: 0;
+}
+
+.cardAdmTopo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 10px 0 10px;
+}
+
+.cardAdmImagem {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 6px;
+}
+
+.cardAdmNome {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 2px 0;
+    text-align: center;
+}
+
+.cardAdmStatus {
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    padding: 0 10px 8px 10px;
+}
+
+.cardAdmBotoes {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 0 10px 10px 10px;
+    margin-top: auto;
+}
+
+.btnEditar, .btnInativar, .btnAtivar, .btnExcluir {
+    width: 100%;
+    padding: 6px;
+    border: none;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+.btnEditar { background-color: #167cbf; color: #fff; }
+.btnEditar:hover { background-color: #0c598b; }
+.btnInativar { background-color: #f65682; color: #fff; }
+.btnInativar:hover { background-color: #d4456a; }
+.btnAtivar { background-color: #4CAF50; color: #fff; }
+.btnAtivar:hover { background-color: #388E3C; }
+.btnExcluir { background-color: #333; color: #fff; }
+.btnExcluir:hover { background-color: #555; }
+
+
+
+.menulateral {
+    width: 250px;
+    background-color: #fff;
+
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.conteudo {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.acoes {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.titulos {
+    margin: 30px 0 15px 0;
+}
+
+/* Cards lado a lado */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.cards > p {
+    width: 100%;
+}
+
+/* Card padrão (igual ADM) */
+.cardAdm {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    width: 220px;
+    min-width: 200px;
+    flex-shrink: 0;
+    border-top: 4px solid #167cbf;
+}
+
+.cardAdmTopo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 10px 0 10px;
+}
+
+.cardAdmImagem {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 6px;
+}
+
+.cardAdmNome {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 2px 0;
+    text-align: center;
+}
+
+.cardAdmStatus {
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    padding: 0 10px 8px 10px;
+}
+
+.cardAdmBotoes {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 0 10px 10px 10px;
+    margin-top: auto;
+}
+
+.btnEditar {
+    width: 100%;
+    padding: 6px;
+    border: none;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    background-color: #167cbf;
+    color: #fff;
+}
+
+.btnEditar:hover { background-color: #0c598b; }
+
+.btnExcluir {
+    width: 100%;
+    padding: 6px;
+    border: none;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    background-color: #f65682;
+    color: #fff;
+}
+
+.btnExcluir:hover { background-color: #d4456a; }
+
+/* Paginação */
+.paginacao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.paginacao button {
+    background-color: #167cbf;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.paginacao button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.paginacao span {
+    font-size: 14px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .secao { flex-direction: column; }
+    .menulateral { width: 100%; height: auto; position: relative; }
+    .acoes { flex-direction: column; }
+    .cardAdm { width: 100%; min-width: 100%; }
+}
+
+@media (max-width: 768px) {
+    .cardAdm {
+        width: 100%;
+        min-width: 100%;
+    }
+}
+
+
