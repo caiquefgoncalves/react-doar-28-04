@@ -6,13 +6,14 @@ import Titulo from "../Titulo/Titulo.jsx";
 import css from './Ongs1.module.css'
 import Curtida from "../Curtida/Curtida.jsx";
 
-export default function Ongs() {
+export default function Ongs({api}) {
+    const api_url = api
     const [ongs, setOngs] = useState([]);
     const [todasOngs, setTodasOngs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [busca, setBusca] = useState('');
     const [categoriaFiltro, setCategoriaFiltro] = useState('todas');
-    const API_URL = 'http://10.92.3.167:5000';
+
 
     useEffect(() => {
         buscarOngs();
@@ -21,7 +22,7 @@ export default function Ongs() {
     async function buscarOngs() {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_URL}/listar_ongs_publicas?token=${token || ''}`, { credentials: 'include' });
+            const response = await fetch(`${api_url}/listar_ongs_publicas?token=${token || ''}`, { credentials: 'include' });
             if (response.ok) {
                 const data = await response.json();
                 if (data.ongs) {
@@ -83,7 +84,7 @@ export default function Ongs() {
                     ) : (
                         ongs.map(ong => (
                             <Link to={`/ong/${ong.id}`} key={ong.id} className={css.card}>
-                                <img src={ong.foto ? `${API_URL}/uploads/Usuarios/${ong.foto}` : '/ong-icon.png'} alt={ong.nome} className={css.cardImagem} onError={(e) => { e.target.src = '/ong-icon.png'; }} />
+                                <img src={`${api_url}/uploads/Usuarios/${ong.id}`} alt={ong.nome} className={css.cardImagem} onError={(e) => { e.target.src = '/ong-icon.png'; }} />
                                 <div className={css.cardInfo}>
                                     <h3 className={css.cardNome}>{ong.nome}</h3>
                                     <p className={css.cardDesc}>{ong.descricao_breve?.substring(0, 80) || 'Sem descrição'}...</p>

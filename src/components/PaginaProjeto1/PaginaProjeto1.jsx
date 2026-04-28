@@ -14,7 +14,6 @@ export default function PaginaProjeto1({ api }) {
     const [loading, setLoading] = useState(true);
     const api_url = api;
 
-    // Estado para controle da página das atualizações
     const [paginaAtualizacoes, setPaginaAtualizacoes] = useState(0);
     const atualizacoesPorPagina = 2;
 
@@ -34,25 +33,21 @@ export default function PaginaProjeto1({ api }) {
                     setProjeto(data.projeto);
                     setOng(data.ong);
                     setAtualizacoes(data.atualizacoes || []);
-                    // Resetar página quando carregar novos dados
                     setPaginaAtualizacoes(0);
-                    setQtd(data.qtd_atualizacoes)
+                    setQtd(data.qtd_atualizacoes || data.atualizacoes?.length || 0);
                 }
             }
         } catch (error) { console.error('Erro:', error); }
         finally { setLoading(false); }
     }
 
-    // Calcular total de páginas das atualizações
     const totalPaginasAtualizacoes = Math.ceil(atualizacoes.length / atualizacoesPorPagina);
 
-    // Pegar atualizações da página atual
     const atualizacoesPaginadas = atualizacoes.slice(
         paginaAtualizacoes * atualizacoesPorPagina,
         (paginaAtualizacoes + 1) * atualizacoesPorPagina
     );
 
-    // Funções de navegação
     const proximaPagina = () => {
         if (paginaAtualizacoes < totalPaginasAtualizacoes - 1) {
             setPaginaAtualizacoes(p => p + 1);
@@ -77,7 +72,6 @@ export default function PaginaProjeto1({ api }) {
             <MenuLateral/>
             <div className={css.conteudo}>
 
-                {/* Layout com duas colunas */}
                 <div className={css.layoutDuasColunas}>
                     {/* Coluna Esquerda */}
                     <div className={css.colunaEsquerda}>
@@ -89,7 +83,7 @@ export default function PaginaProjeto1({ api }) {
                                     src={`${api_url}/uploads/Usuarios/${ong.id}.jpeg`}
                                     alt={`Logo da ONG ${ong.nome}`}
                                     onError={(e) => {
-                                        console.log("Erro ao carregar:", `${api_url}/uploads/Usuarios/${ong.id}.jpeg`);
+                                        e.target.onerror = null;
                                         e.target.src = '/ong-icon.png';
                                     }}
                                 />
@@ -128,30 +122,26 @@ export default function PaginaProjeto1({ api }) {
                             </div>
                         </div>
 
-                        {/* Últimas atualizações - COM CARROSSEL */}
+                        {/* Últimas atualizações */}
                         {atualizacoes.length > 0 && (
                             <div className={css.secaoBox}>
                                 <div className={css.headerAtualizacoes}>
                                     <Titulo titulo={'Últimas atualizações'} cor={'preto'}/>
-
                                     <p className={css.texto}>{qtd} atualizações</p>
-
                                 </div>
                                 <div className={css.atualizacoesLista}>
                                     {atualizacoesPaginadas.map(att => (
                                         <div key={att.id} className={css.atualizacao}>
-                                            <img className={css.attImagem} src={`${api_url}/uploads/Atualizacoes/${att.id}.jpeg`}
-                                            />
-                                            <h3 className={css.attTitulo}>{att.titulo}</h3>
-                                            {att.texto && <p className={css.attTexto}>{att.texto}</p>}
                                             {att.foto && (
                                                 <img
+                                                    className={css.attImagem}
                                                     src={`${api_url}/uploads/Atualizacoes/${att.foto}`}
                                                     alt={att.titulo}
-                                                    className={css.attImagem}
-                                                    onError={(e) => { e.target.style.display = 'none'; }}
+                                                    onError={(e) => { e.target.onerror = null; e.target.src = '/atualizacao-default.png'; }}
                                                 />
                                             )}
+                                            <h3 className={css.attTitulo}>{att.titulo}</h3>
+                                            {att.texto && <p className={css.attTexto}>{att.texto}</p>}
                                         </div>
                                     ))}
                                 </div>
@@ -177,7 +167,6 @@ export default function PaginaProjeto1({ api }) {
                             </div>
                         )}
 
-                        {/* Mensagem quando não há atualizações */}
                         {atualizacoes.length === 0 && (
                             <div className={css.secaoBox}>
                                 <Titulo titulo={'Últimas atualizações'} cor={'preto'}/>
@@ -191,7 +180,6 @@ export default function PaginaProjeto1({ api }) {
                         <div className={css.colunaDireita}>
                             <div className={css.cardApoie}>
                                 <Titulo titulo={`Apoie o ${ong.nome} diretamente!`} cor={'preto'}/>
-
                                 <div className={css.dadosBancarios}>
                                     <p><strong>Instituição:</strong><br/>{ong.cod_banco || 'Não informado'}</p>
                                     <p><strong>Agência:</strong><br/>{ong.num_agencia || 'Não informada'}</p>

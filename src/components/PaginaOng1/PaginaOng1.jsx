@@ -104,7 +104,7 @@ export default function PaginaOng1({api}) {
                                             {att.texto && <p className={css.attTexto}>{att.texto}</p>}
                                             {att.foto && (
                                                 <img
-                                                    src={`${API_URL}/uploads/Atualizacoes/${att.foto}`}
+                                                    src={`${api_url}/uploads/Atualizacoes/${att.foto}`}
                                                     alt={att.titulo}
                                                     className={css.attImagem}
                                                     onError={(e) => { e.target.style.display = 'none'; }}
