@@ -90,7 +90,7 @@ export default function Ongs({api}) {
                                     className={css.cardImagem}
                                     onError={(e) => {
                                         e.target.onerror = null;
-                                        e.target.src = '/ong-icon.png';
+                                        e.currentTarget.src = '/sem_imagem.webp';
                                     }}
                                 />
                                 <div className={css.cardInfo}>

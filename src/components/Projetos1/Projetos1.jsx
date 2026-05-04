@@ -83,7 +83,9 @@ export default function Projetos({api}) {
                     ) : (
                         projetos.map(projeto => (
                             <Link to={`/projeto/${projeto.id}`} key={projeto.id} className={css.card}>
-                                <img src={projeto.foto ? `${api_url}/uploads/Projetos/${projeto.foto}` : '/projeto-default.png'} alt={projeto.titulo} className={css.cardImagem} onError={(e) => { e.target.src = '/projeto-default.png'; }} />
+                                <img src={projeto.foto ? `${api_url}/uploads/Projetos/${projeto.foto}` : '/projeto-default.png'} alt={projeto.titulo} className={css.cardImagem} onError={(e) => {
+                                    e.currentTarget.src = '/sem_imagem.webp';
+                                }} />
                                 <div className={css.cardInfo}>
                                     <h3 className={css.cardNome}>{projeto.titulo}</h3>
                                     <p className={css.cardDesc}>{projeto.descricao?.substring(0, 80)}...</p>

@@ -150,7 +150,9 @@ export default function DashboardDaOng1({api}) {
                     {projetosPaginados.length === 0 ? <p>Nenhum projeto cadastrado</p> : projetosPaginados.map((projeto) => (
                         <div key={projeto.id} className={css.cardAdm}>
                             <div className={css.cardAdmTopo}>
-                                <img src={projeto.foto ? `${api_url}/uploads/Projetos/${projeto.foto}` : '/projeto-default.png'} alt={projeto.titulo} className={css.cardAdmImagem} onError={(e) => { e.target.src = '/projeto-default.png'; }} />
+                                <img src={projeto.foto ? `${api_url}/uploads/Projetos/${projeto.foto}` : '/projeto-default.png'} alt={projeto.titulo} className={css.cardAdmImagem} onError={(e) => {
+                                    e.currentTarget.src = '/sem_imagem.webp';
+                                }} />
                                 <h3 className={css.cardAdmNome}>{projeto.titulo}</h3>
                             </div>
                             <span className={css.cardAdmStatus} style={{ color: '#167cbf' }}>{projeto.status || 'Ativo'}</span>
@@ -174,7 +176,9 @@ export default function DashboardDaOng1({api}) {
                     {atualizacoesPaginadas.length === 0 ? <p>Nenhuma atualização</p> : atualizacoesPaginadas.map((atualizacao) => (
                         <div key={atualizacao.id} className={css.cardAdm}>
                             <div className={css.cardAdmTopo}>
-                                <img src={atualizacao.foto ? `${api_url}/uploads/Atualizacoes/${atualizacao.foto}` : '/atualizacao-default.png'} alt={atualizacao.titulo} className={css.cardAdmImagem} onError={(e) => { e.target.src = '/atualizacao-default.png'; }} />
+                                <img src={atualizacao.foto ? `${api_url}/uploads/Atualizacoes/${atualizacao.foto}` : '/atualizacao-default.png'} alt={atualizacao.titulo} className={css.cardAdmImagem} onError={(e) => {
+                                    e.currentTarget.src = '/sem_imagem.webp';
+                                }} />
                                 <h3 className={css.cardAdmNome}>{atualizacao.titulo}</h3>
                             </div>
                             <span className={css.cardAdmStatus} style={{ color: '#167cbf' }}>{atualizacao.data || 'Sem data'}</span>

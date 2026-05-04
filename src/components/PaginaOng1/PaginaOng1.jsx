@@ -8,10 +8,17 @@ import css from "./PaginaOng1.module.css";
 export default function PaginaOng1({api}) {
     const api_url = api
     const { id } = useParams();
-    const [ong, setOng] = useState(null);
-    const [projetos, setProjetos] = useState([]);
-    const [atualizacoes, setAtualizacoes] = useState([]);
+    let [ong, setOng] = useState(null);
+    let [projetos, setProjetos] = useState([]);
+    let [qtdProjetos, setQtdProjetos] = useState('');
+    let [qtdAtualizacoes, setQtdAtualizacoes] = useState('');
+    let [atualizacoes, setAtualizacoes] = useState([]);
     const [loading, setLoading] = useState(true);
+    let [paginaProjetos, setPaginasProjetos] = useState(0);
+    const projetosPorPagina = 2;
+    const atualizacoesPorPagina = 2;
+    let [idsAbertos, setIdsAbertos] = useState("");
+    let [paginaAtualizacoes, setPaginaAtualizacoes] = useState(0);
 
 
     useEffect(() => {
@@ -30,6 +37,8 @@ export default function PaginaOng1({api}) {
                 if (data.ong) setOng(data.ong);
                 if (data.projetos) setProjetos(data.projetos);
                 if (data.atualizacoes) setAtualizacoes(data.atualizacoes || []);
+                if (data.qtd_projetos) setQtdProjetos(data.qtd_projetos || []);
+                if (data.qtd_atualizacoes) setQtdAtualizacoes(data.qtd_atualizacoes);
             }
         } catch (error) { console.error('Erro:', error); }
         finally { setLoading(false); }
@@ -43,23 +52,77 @@ export default function PaginaOng1({api}) {
         <section className={css.secao}><MenuLateral/><div className={css.conteudo}><p>ONG não encontrada</p></div></section>
     );
 
+    const totalPaginasProjetos = Math.ceil(projetos.length / projetosPorPagina);
+
+    const projetosPaginados = projetos.slice(
+        paginaProjetos * projetosPorPagina,
+        (paginaProjetos + 1) * projetosPorPagina
+    );
+
+    const proximaPaginaProjetos = () => {
+        if (paginaProjetos < totalPaginasProjetos - 1) {
+            setPaginasProjetos(p => p + 1);
+        }
+    };
+
+    const paginaAnteriorProjetos = () => {
+        if (paginaProjetos > 0) {
+            setPaginasProjetos(p => p - 1);
+        }
+    };
+
+    const totalPaginasAtualizacoes = Math.ceil(atualizacoes.length / atualizacoesPorPagina);
+
+    const atualizacoesPaginadas = atualizacoes.slice(
+        paginaAtualizacoes * atualizacoesPorPagina,
+        (paginaAtualizacoes + 1) * atualizacoesPorPagina
+    );
+
+    const proximaPaginaAtualizacoes = () => {
+        if (paginaAtualizacoes < totalPaginasAtualizacoes - 1) {
+            setPaginaAtualizacoes(p => p + 1);
+        }
+    };
+
+    const paginaAnteriorAtualizacoes = () => {
+        if (paginaAtualizacoes > 0) {
+            setPaginaAtualizacoes(p => p - 1);
+        }
+    };
+
+
+
     return (
         <section className={css.secao}>
             <MenuLateral/>
             <div className={css.conteudo}>
 
-                {/* Nome e descrição breve */}
-                <h1 className={css.nome}>{ong.nome}</h1>
-                <p className={css.descBreve}>{ong.descricao_breve}</p>
-
                 <div className={css.layoutDuasColunas}>
 
                     {/* Coluna Esquerda */}
                     <div className={css.colunaEsquerda}>
+                        <div className={css.headerONG}>
+                            {ong && (
+                                <img
+                                    className={css.imagem}
+                                    src={`${api_url}/uploads/Usuarios/${ong.id}.jpeg`}
+                                    alt={`Logo da ONG ${ong.nome}`}
+                                    onError={(e) => {
+                                        e.currentTarget.onerror = null;
+                                        e.currentTarget.src = '/sem_imagem.webp';
+                                    }}
+                                />
+
+                            )}
+                            <div>
+                                <h1 className={css.nome}>{ong.nome}</h1>
+                                <p className={css.descBreve}>{ong.descricao_breve}</p>                    </div>
+                        </div>
+
 
                         {/* Sobre Nós */}
                         <div className={css.secaoBox}>
-                            <Titulo titulo={'Sobre Nós'} cor={'preto'}/>
+                            <p className={css.sobrenos}>Sobre nós</p>
                             <p className={css.descLonga}>{ong.descricao_longa || 'Sem descrição detalhada.'}</p>
                         </div>
 
@@ -80,14 +143,30 @@ export default function PaginaOng1({api}) {
                         {/* Projetos da ONG */}
                         {projetos.length > 0 && (
                             <div className={css.secaoBox}>
-                                <Titulo titulo={'Projetos Ativos'} cor={'preto'}/>
+                                <div className={css.headerAtualizacoes}>
+                                    <p className={css.sobrenos}>Projetos ativos</p>
+                                    {qtdProjetos == 0 && (
+                                        <p className={css.texto}>Não há projetos</p>
+                                    )}
+                                    {qtdProjetos == 1 && (
+                                        <p className={css.texto}>{qtdProjetos} projeto</p>
+                                    )}
+                                    {qtdProjetos > 1 && (
+                                        <p className={css.texto}>{qtdProjetos} projetos</p>
+                                    )}
+                                </div>
                                 <div className={css.projetosLista}>
-                                    {projetos.map(proj => (
+                                    {/* MAPEANDO APENAS OS PAGINADOS */}
+                                    {projetosPaginados.map(proj => (
                                         <Link to={`/projeto/${proj.id}`} key={proj.id} className={css.atualizacao}>
-                                            <img     className={css.attImagem}
-                                                     src={`${api_url}/uploads/Projeto/${proj.id}`}
-                                                     alt={proj.titulo}
-                                                     onError={(e) => { e.target.onerror = null; e.target.src = '/atualizacao-default.png'; }}
+                                            <img
+                                                className={css.attImagem}
+                                                src={`${api_url}/uploads/Projeto/${proj.id}`}
+                                                alt={proj.titulo}
+                                                onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.currentTarget.src = '/sem_imagem.webp';
+                                                }}
                                             />
                                             <h3 className={css.attTitulo}>{proj.titulo}</h3>
                                             <p className={css.attTexto}>{proj.descricao?.substring(0, 100)}...</p>
@@ -95,31 +174,109 @@ export default function PaginaOng1({api}) {
                                         </Link>
                                     ))}
                                 </div>
+
+                                {/* CONTROLES DO CARROSSEL */}
+                                {totalPaginasProjetos > 1 && (
+                                    <div className={css.controlesCarrossel}>
+                                        <button
+                                            className={`${css.botaoCarrossel} ${paginaProjetos === 0 ? css.desabilitado : ''}`}
+                                            onClick={paginaAnteriorProjetos}
+                                            disabled={paginaProjetos === 0}
+                                        > ← </button>
+
+                                        <span className={css.paginaInfo}>
+                                            {paginaProjetos + 1} de {totalPaginasProjetos}
+                                        </span>
+
+                                        <button
+                                            className={`${css.botaoCarrossel} ${paginaProjetos === totalPaginasProjetos - 1 ? css.desabilitado : ''}`}
+                                            onClick={proximaPaginaProjetos}
+                                            disabled={paginaProjetos === totalPaginasProjetos - 1}
+                                        > → </button>
+                                    </div>
+                                )}
                             </div>
                         )}
 
                         {/* Últimas atualizações da ONG */}
                         {atualizacoes.length > 0 && (
                             <div className={css.secaoBox}>
-                                <Titulo titulo={'Últimas atualizações'} cor={'preto'}/>
-                                <div className={css.atualizacoesLista}>
-                                    {atualizacoes.map(att => (
+                                <div className={css.headerAtualizacoes}>
+                                    <p className={css.sobrenos}>Últimas atualizações</p>
+                                    {qtdAtualizacoes == 0 && (
+                                        <p className={css.texto}>Não há atualizações</p>
+                                    )}
+                                    {qtdAtualizacoes == 1 && (
+                                        <p className={css.texto}>{qtdAtualizacoes} atualização</p>
+                                    )}
+                                    {qtdAtualizacoes > 1 && (
+                                        <p className={css.texto}>{qtdAtualizacoes} atualizações</p>
+                                    )}
+                                </div>
+                                <div className={css.projetosLista}>
+                                    {atualizacoesPaginadas.map(att => (
                                         <div key={att.id} className={css.atualizacao}>
-                                            <h3 className={css.attTitulo}>{att.titulo}</h3>
-                                            {att.texto && <p className={css.attTexto}>{att.texto}</p>}
-                                            {att.foto && (
+                                            {att && (
                                                 <img
+                                                    className={css.attImagem}
                                                     src={`${api_url}/uploads/Atualizacoes/${att.foto}`}
                                                     alt={att.titulo}
-                                                    className={css.attImagem}
-                                                    onError={(e) => { e.target.style.display = 'none'; }}
+                                                    onError={(e) => { e.target.onerror = null;
+                                                        e.currentTarget.src = '/sem_imagem.webp';
+                                                    }}
                                                 />
+                                            )}
+                                            <h3 className={css.attTitulo}>{att.titulo}</h3>
+                                            {att.texto && (
+                                                <p className={css.attTexto}>
+                                                    {/* Só corta e coloca "..." se o texto for maior que 100 E não estiver aberto */}
+                                                    {idsAbertos === att.id || att.texto.length <= 100
+                                                        ? att.texto
+                                                        : att.texto.substring(0, 100) + "..."}
+
+                                                    {/* O botão só aparece se o texto for maior que 100 caracteres */}
+                                                    {att.texto.length > 100 && (
+                                                        <button
+                                                            onClick={() => setIdsAbertos(idsAbertos === att.id ? null : att.id)}
+                                                            className={css.btnDoar}>
+                                                            {idsAbertos === att.id ? "Ler menos" : "Ler mais"}
+                                                        </button>
+                                                    )}
+                                                </p>
                                             )}
                                         </div>
                                     ))}
                                 </div>
+                                {totalPaginasAtualizacoes > 1 && (
+                                    <div className={css.controlesCarrossel}>
+                                        <button
+                                            className={`${css.botaoCarrossel} ${paginaAtualizacoes === 0 ? css.desabilitado : ''}`}
+                                            onClick={paginaAnteriorAtualizacoes}
+                                            disabled={paginaAtualizacoes === 0}
+                                        >
+                                            ←
+                                        </button>
+                                        <span className={css.paginaInfo}>{paginaAtualizacoes + 1} de {totalPaginasAtualizacoes}</span>
+                                        <button
+                                            className={`${css.botaoCarrossel} ${paginaAtualizacoes === totalPaginasAtualizacoes - 1 ? css.desabilitado : ''}`}
+                                            onClick={proximaPaginaAtualizacoes}
+                                            disabled={paginaAtualizacoes === totalPaginasAtualizacoes - 1}
+                                        >
+                                            →
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
+
+                        {atualizacoes.length === 0 && (
+                            <div className={css.secaoBox}>
+                                <p className={css.sobrenos}>Últimas atualizações</p>
+                                <p className={css.semAtualizacoes}>Nenhuma atualização disponível no momento.</p>
+                            </div>
+                        )}
+
+
                     </div>
 
 

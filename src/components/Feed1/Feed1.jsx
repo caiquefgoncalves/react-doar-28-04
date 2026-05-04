@@ -129,7 +129,9 @@ export default function Feed({api}) {
                                     src={item.ong_foto ? `${api_url}/uploads/Usuarios/${item.ong_foto}` : '/ong-icon.png'}
                                     alt={item.ong_nome}
                                     className={css.fotoOng}
-                                    onError={(e) => { e.target.src = '/ong-icon.png'; }}
+                                    onError={(e) => {
+                                        e.currentTarget.src = '/sem_imagem.webp';
+                                    }}
                                 />
                                 <div className={css.headerInfo}>
                                     <h3 className={css.nomeOng}>{item.ong_nome}</h3>
@@ -143,8 +145,12 @@ export default function Feed({api}) {
                                 {item.foto && (
                                     <img
                                         src={`${api_url}/uploads/Atualizacoes/${item.foto}`}
-                                        alt=""
+                                        alt={item.titulo}
+                                        onError={(e) => {
+                                            e.currentTarget.src = '/sem_imagem.webp';
+                                        }}
                                         className={css.fotoAtualizacao}
+
                                     />
                                 )}
 

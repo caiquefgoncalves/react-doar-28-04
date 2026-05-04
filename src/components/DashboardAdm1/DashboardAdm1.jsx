@@ -237,7 +237,9 @@ export default function DashboardAdm1({api}) {
                         return (
                             <div key={ong.id} className={css.cardAdm} style={{ borderTop: `4px solid ${status.cor}` }}>
                                 <div className={css.cardAdmTopo}>
-                                    <img src={getImagemUrl(ong.id)} alt={ong.nome} className={css.cardAdmImagem} onError={(e) => { e.target.onerror = null; e.target.src = '/ong-icon.png'; }} />
+                                    <img src={getImagemUrl(ong.id)} alt={ong.nome} className={css.cardAdmImagem} onError={(e) => { e.target.onerror = null;
+                                        e.currentTarget.src = '/sem_imagem.webp';
+                                    }} />
                                     <h3 className={css.cardAdmNome}>{ong.nome}</h3>
                                 </div>
                                 <span className={css.cardAdmStatus} style={{ color: status.cor }}>{status.texto}</span>
@@ -267,7 +269,9 @@ export default function DashboardAdm1({api}) {
                     {doadoresPaginados.length === 0 ? <p>Nenhum doador cadastrado</p> : doadoresPaginados.map((doador) => (
                         <div key={doador[0]} className={css.cardAdm} style={{ borderTop: `4px solid ${doador[15] === 1 ? '#167cbf' : '#f65682'}` }}>
                             <div className={css.cardAdmTopo}>
-                                <img src={getImagemUrl(doador[0])} alt={doador[1]} className={css.cardAdmImagem} onError={(e) => { e.target.onerror = null; e.target.src = '/doador-icon.png'; }} />
+                                <img src={getImagemUrl(doador[0])} alt={doador[1]} className={css.cardAdmImagem} onError={(e) => { e.target.onerror = null;
+                                    e.currentTarget.src = '/sem_imagem.webp';
+                                }} />
                                 <h3 className={css.cardAdmNome}>{doador[1]}</h3>
                             </div>
                             <span className={css.cardAdmStatus} style={{ color: doador[15] === 1 ? '#167cbf' : '#f65682' }}>{doador[15] === 1 ? 'Ativo' : 'Inativo'}</span>

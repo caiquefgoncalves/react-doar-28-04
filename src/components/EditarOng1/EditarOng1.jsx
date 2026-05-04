@@ -109,7 +109,7 @@ export default function EditarOng1({api}) {
             console.log('Resposta:', data);
             setMsgTexto(data.message || data.error);
             setMsgTipo(response.ok ? 'sucesso' : 'erro');
-            if (response.ok) setTimeout(() => navigate('/dashboardOng'), 2000);
+            if (response.ok) setTimeout(() => localStorage.setItem('nome', data.usuario.nome), navigate('/dashboardOng'), 2000);
         } catch (error) {
             setMsgTexto('Erro de conexão');
             setMsgTipo('erro');

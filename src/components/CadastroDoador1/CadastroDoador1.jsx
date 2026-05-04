@@ -71,14 +71,14 @@ export default function CadastroDoador1({api}) {
             <div className={css.formulario}>
                 <div className={css.linha}>
                     <div className={css.campos}>
-                        <Input label={'Nome'} type={'text'} placeholder={'Digite seu nome'} required={true} input={nome} alterarInput={alterarNome} />
-                        <Input label={'Senha'} type={'password'} placeholder={'Digite sua senha'} required={true} input={senha} alterarInput={alterarSenha} />
+                        <Input label={'Nome'} type={'text'} placeholder={'Digite seu nome'} required={true} maxLength={254} input={nome} alterarInput={alterarNome} />
+                        <Input label={'Senha'} type={'password'} placeholder={'Digite sua senha'} required={true} maxLength={254} input={senha} alterarInput={alterarSenha} />
                         <Input label={'Telefone'} type={'text'} placeholder={'Digite seu telefone'} required={true} input={telefone} alterarInput={alterarTelefone} mascara={'telefone'} />
-                        <Input label={'Email'} type={'text'} placeholder={'Digite seu email'} required={true} input={email} alterarInput={alterarEmail} />
+                        <Input label={'Email'} type={'text'} placeholder={'Digite seu email'} required={true} maxLength={254} input={email} alterarInput={alterarEmail} />
                     </div>
                     <div className={css.campos}>
                         <Input label={'CPF'} type={'text'} placeholder={'Digite seu CPF'} required={true} input={cpf} alterarInput={alterarCPF} mascara={'cpf'} />
-                        <Input label={'Confirmar senha'} type={'password'} placeholder={'Confirme sua senha'} required={true} input={confirmarSenha} alterarInput={alterarConfirmarSenha} />
+                        <Input label={'Confirmar senha'} type={'password'} placeholder={'Confirme sua senha'} required={true} maxLength={254} input={confirmarSenha} alterarInput={alterarConfirmarSenha} />
                         <InputArquivo tamanho={'big'} required={true} alterarInput={alterarFotoPerfil} />
                     </div>
                 </div>

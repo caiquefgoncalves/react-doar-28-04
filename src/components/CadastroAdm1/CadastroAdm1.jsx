@@ -101,6 +101,7 @@ export default function CadastroAdm1({api}) {
                         type={'text'}
                         placeholder={'Digite seu nome'}
                         required={true}
+                        maxLength={254}
                         input={nome}
                         alterarInput={alterarNome}
                     />
@@ -109,6 +110,7 @@ export default function CadastroAdm1({api}) {
                         type={'password'}
                         placeholder={'Digite sua senha'}
                         required={true}
+                        maxLength={254}
                         input={senha}
                         alterarInput={alterarSenha}
                     />
@@ -139,6 +141,7 @@ export default function CadastroAdm1({api}) {
                         type={'text'}
                         placeholder={'Digite seu email'}
                         required={true}
+                        maxLength={254}
                         input={email}
                         alterarInput={alterarEmail}
 
@@ -149,6 +152,7 @@ export default function CadastroAdm1({api}) {
                         type={'password'}
                         placeholder={'Confirme sua senha'}
                         required={true}
+                        maxLength={254}
                         input={confirmarSenha}
                         alterarInput={alterarConfirmarSenha}
                     />

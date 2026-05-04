@@ -85,7 +85,7 @@ export default function PaginaProjeto1({ api }) {
                                     alt={`Logo da ONG ${ong.nome}`}
                                     onError={(e) => {
                                         e.target.onerror = null;
-                                        e.target.src = '/ong-icon.png';
+                                        e.currentTarget.src = '/sem_imagem.webp';
                                     }}
                                 />
                             )}
@@ -127,7 +127,7 @@ export default function PaginaProjeto1({ api }) {
                         {atualizacoes.length > 0 && (
                             <div className={css.secaoBox}>
                                 <div className={css.headerAtualizacoes}>
-                                    <Titulo titulo={'Últimas atualizações'} cor={'preto'}/>
+                                    <p className={css.sobrenos}>Últimas atualizações</p>
                                     {qtd == 0 && (
                                         <p className={css.texto}>Não há atualizações</p>
                                     )}
@@ -146,7 +146,9 @@ export default function PaginaProjeto1({ api }) {
                                                     className={css.attImagem}
                                                     src={`${api_url}/uploads/Atualizacoes/${att.foto}`}
                                                     alt={att.titulo}
-                                                    onError={(e) => { e.target.onerror = null; e.target.src = '/atualizacao-default.png'; }}
+                                                    onError={(e) => { e.target.onerror = null;
+                                                        e.currentTarget.src = '/sem_imagem.webp';
+                                                    }}
                                                 />
                                             )}
                                             <h3 className={css.attTitulo}>{att.titulo}</h3>
@@ -194,7 +196,7 @@ export default function PaginaProjeto1({ api }) {
 
                         {atualizacoes.length === 0 && (
                             <div className={css.secaoBox}>
-                                <Titulo titulo={'Últimas atualizações'} cor={'preto'}/>
+                                <p className={css.sobrenos}>Últimas atualizações</p>
                                 <p className={css.semAtualizacoes}>Nenhuma atualização disponível no momento.</p>
                             </div>
                         )}
