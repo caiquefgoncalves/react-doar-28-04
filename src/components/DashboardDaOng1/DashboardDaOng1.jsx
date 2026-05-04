@@ -137,8 +137,8 @@ export default function DashboardDaOng1({api}) {
             <section className={css.menulateral}><MenuLateral/></section>
             <div className={css.conteudo}>
                 <Mensagem tipo={tipoMensagem} texto={mensagem} onClose={() => setMensagem('')} />
-                <div><Titulo titulo={`Olá, ${nomeOng}`} /></div>
-                <Titulo titulo={'Ações Rápidas'} cor={'preto'}/>
+                <div className={css.Titulo}><Titulo titulo={`Olá,`} cor={'preto'} span={nomeOng} corSpan={'laranja-span'}/></div>
+                <p className={css.acoesRapidas}>Ações rápidas</p>
                 <div className={css.acoes}>
                     <Acoes cor={'amarelo'} texto={'Editar Perfil'} pagina={`/editarOng/${idOng}`}/>
                     <Acoes cor={'amarelo'} texto={'Criar Projeto'} pagina={'/criarProjeto'}/>

@@ -12,6 +12,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     box-sizing: border-box;
+    box-shadow: -1px 4px 9px 0px #2c2c2c;
 }
 
 .funcoes {
@@ -63,7 +64,39 @@
 @media (max-width: 768px) {
     .container {
         height: auto;
-        position: sticky !important;
+        position: fixed !important;
+        top: 84vh;
+        width: 100%;
+        padding: 1.5rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        background-color: white;
+    }
+
+    .funcoes {
+        padding: 8px 10px;
+    }
+
+    .funcoes h2 {
+        font-size: 0.9rem;
+    }
+
+    .desktop {
+        display: none;
+    }
+
+    .funcoes img {
+        width: 3rem;
+        height: auto
+    }
+}
+
+@media (max-width: 426px) {
+    .container {
+        height: auto;
+        position: fixed !important;
         top: 80vh;
         width: 100%;
         padding: 1.5rem;
@@ -89,5 +122,15 @@
     .funcoes img {
         width: 3rem;
         height: auto
+    }
+}
+
+@media (max-width: 321px) {
+    .funcoes img {
+        width: 2.2rem;
+    }
+
+    .container {
+        top: 82vh;
     }
 }

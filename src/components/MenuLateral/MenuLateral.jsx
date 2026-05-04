@@ -30,19 +30,19 @@ export default function MenuLateral() {
         <div className={css.container}>
             <div className={css.funcoes} onClick={() => navigate('/feed')}>
                 <img src={'/camera.png'} alt="Feed"/>
-                <h2>Feed</h2>
+                <h2 className={css.desktop}>Feed</h2>
             </div>
             <div className={css.funcoes} onClick={irParaPerfil}>
                 <img src={'/perfil.png'} alt="Perfil"/>
-                <h2>Perfil</h2>
+                <h2 className={css.desktop}>Perfil</h2>
             </div>
             <div className={css.funcoes} onClick={() => navigate('/ongs')}>
                 <img src={'/ongs.png'} alt="ONGs"/>
-                <h2>ONGs</h2>
+                <h2 className={css.desktop}>ONGs</h2>
             </div>
             <div className={css.funcoes} onClick={() => navigate('/projetos')}>
                 <img src={'/projetos.png'} alt="Projetos"/>
-                <h2>Projetos</h2>
+                <h2 className={css.desktop}>Projetos</h2>
             </div>
         </div>
     )

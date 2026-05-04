@@ -135,17 +135,7 @@ export default function Header() {
                                 <li>
                                     <button
                                         onClick={fazerLogout}
-                                        style={{
-                                            backgroundColor: '#f44336',
-                                            color: '#fff',
-                                            border: 'none',
-                                            padding: '10px 20px',
-                                            borderRadius: '5px',
-                                            cursor: 'pointer',
-                                            fontWeight: 'bold',
-                                            width: '100%',
-                                            marginTop: '10px'
-                                        }}
+                                        className={css.btnSairMobile}
                                     >
                                         Sair
                                     </button>

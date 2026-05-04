@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Titulo from "../Titulo/Titulo.jsx";
-import css from "../DashboardDaOng1/DashboardDaOng1.module.css";
+import css from "../DashboardAdm1/DashboardAdm1.module.css";
 import Acoes from "../Acoes/Acoes.jsx";
 import MenuLateral from "../MenuLateral/MenuLateral.jsx";
 import Mensagem from "../Mensagem/Mensagem.jsx";
@@ -37,9 +37,14 @@ export default function DashboardAdm1({api}) {
     const [motivoBloqueio, setMotivoBloqueio] = useState('');
 
     const [paginaOngs, setPaginaOngs] = useState(0);
-    const ongsPorPagina = 3;
     const [paginaDoadores, setPaginaDoadores] = useState(0);
-    const doadoresPorPagina = 3;
+
+    // Detectar se é mobile
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 426);
+
+    // Quantidade de itens por página (dinâmico)
+    const ongsPorPagina = isMobile ? 1 : 3;
+    const doadoresPorPagina = isMobile ? 1 : 3;
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -51,6 +56,13 @@ export default function DashboardAdm1({api}) {
         if (nome) setNomeADM(nome);
         buscarOngs();
         buscarDoadores();
+
+        // Listener para redimensionamento
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 426);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     async function buscarOngs() {
@@ -226,8 +238,8 @@ export default function DashboardAdm1({api}) {
                     </div>
                 )}
 
-                <div><Titulo titulo={`Olá, ${nomeADM || 'Administrador'}`} /></div>
-                <Titulo titulo={'Ações Rápidas'} cor={'preto'}/>
+                <div className={css.Titulo}><Titulo titulo={`Olá,`} cor={'preto'} span={nomeADM} /></div>
+                <p className={css.acoesRapidas}>Ações rápidas</p>
                 <div className={css.acoes}><Acoes cor={'amarelo'} texto={'Aprovar ONGs'} pagina={'/listaAprovacoes'}/></div>
 
                 <div className={css.titulos}><Titulo titulo={'ONGs Cadastradas'} cor={'preto'}/></div>
