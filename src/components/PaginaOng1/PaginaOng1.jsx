@@ -15,14 +15,26 @@ export default function PaginaOng1({api}) {
     let [atualizacoes, setAtualizacoes] = useState([]);
     const [loading, setLoading] = useState(true);
     let [paginaProjetos, setPaginasProjetos] = useState(0);
-    const projetosPorPagina = 2;
-    const atualizacoesPorPagina = 2;
     let [idsAbertos, setIdsAbertos] = useState("");
     let [paginaAtualizacoes, setPaginaAtualizacoes] = useState(0);
+
+    // Detectar se é mobile
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 425);
+
+    // Quantidade de itens por página (dinâmico)
+    const projetosPorPagina = isMobile ? 1 : 2;
+    const atualizacoesPorPagina = isMobile ? 1 : 2;
 
 
     useEffect(() => {
         buscarDados();
+
+        // Listener para redimensionamento
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 425);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }, [id]);
 
     async function buscarDados() {
@@ -45,11 +57,21 @@ export default function PaginaOng1({api}) {
     }
 
     if (loading) return (
-        <section className={css.secao}><MenuLateral/><div className={css.conteudo}><p>Carregando...</p></div></section>
+        <section className={css.secao}>
+            <div className={css.menulateral}>
+                <MenuLateral/>
+            </div>
+            <div className={css.conteudo}><p>Carregando...</p></div>
+        </section>
     );
 
     if (!ong) return (
-        <section className={css.secao}><MenuLateral/><div className={css.conteudo}><p>ONG não encontrada</p></div></section>
+        <section className={css.secao}>
+            <div className={css.menulateral}>
+                <MenuLateral/>
+            </div>
+            <div className={css.conteudo}><p>ONG não encontrada</p></div>
+        </section>
     );
 
     const totalPaginasProjetos = Math.ceil(projetos.length / projetosPorPagina);
@@ -94,7 +116,9 @@ export default function PaginaOng1({api}) {
 
     return (
         <section className={css.secao}>
-            <MenuLateral/>
+            <div className={css.menulateral}>
+                <MenuLateral/>
+            </div>
             <div className={css.conteudo}>
 
                 <div className={css.layoutDuasColunas}>

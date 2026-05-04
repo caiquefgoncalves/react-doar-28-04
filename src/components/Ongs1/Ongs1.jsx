@@ -58,7 +58,7 @@ export default function Ongs({api}) {
             <MenuLateral/>
             <div className={css.conteudo}>
 
-                <Titulo titulo={'ONGs'} cor={'preto'} />
+
 
                 <div className={css.barraTopo}>
                         <div className={css.buscaInput}>

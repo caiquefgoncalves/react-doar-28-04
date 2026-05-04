@@ -407,6 +407,21 @@
     background: #d32f2f;
 }
 
+.modalBtnAtivar {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    background: #4CAF50;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+    transition: background-color 0.2s;
+    flex: 1;
+}
+
+.modalBtnAtivar:hover { background: #388E3C; }
+
 @media (max-width: 768px) {
     .secao { flex-direction: column; }
     .menulateral { width: 100%; height: auto; position: relative; }

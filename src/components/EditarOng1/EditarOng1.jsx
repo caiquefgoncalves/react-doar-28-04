@@ -85,6 +85,8 @@ export default function EditarOng1({api}) {
 
     async function salvarEdicao() {
         const token = localStorage.getItem('token');
+        const tokenData = decodificarToken(token);
+
         const form = new FormData();
         form.append('token', token);
         form.append('nome', nome?.trim() || '');
@@ -104,12 +106,39 @@ export default function EditarOng1({api}) {
         if (fotoPerfil) form.append('foto_perfil', fotoPerfil);
 
         try {
-            const response = await fetch(`${api_url}/editar_usuarios/${id}`, { method: 'PUT', credentials: 'include', body: form });
+            const response = await fetch(`${api_url}/editar_usuarios/${id}`, {
+                method: 'PUT',
+                credentials: 'include',
+                body: form
+            });
             const data = await response.json();
             console.log('Resposta:', data);
+
             setMsgTexto(data.message || data.error);
             setMsgTipo(response.ok ? 'sucesso' : 'erro');
-            if (response.ok) setTimeout(() => localStorage.setItem('nome', data.usuario.nome), navigate('/dashboardOng'), 2000);
+
+            if (response.ok) {
+                // Atualiza o nome no localStorage se veio na resposta
+                if (data.usuario && data.usuario.nome) {
+                    localStorage.setItem('nome', data.usuario.nome);
+                }
+
+                // Redireciona após 2 segundos
+                setTimeout(() => {
+                    // Se for ADMIN (tipo 0), volta para o dashboard de admin
+                    if (tokenData && tokenData.tipo === 0) {
+                        navigate('/dashboardAdm');
+                    }
+                    // Se for ONG (tipo 2), vai para o dashboard da ONG
+                    else if (tokenData && tokenData.tipo === 2) {
+                        navigate('/dashboardOng');
+                    }
+                    // Fallback
+                    else {
+                        navigate('/login');
+                    }
+                }, 2000);
+            }
         } catch (error) {
             setMsgTexto('Erro de conexão');
             setMsgTipo('erro');

@@ -27,7 +27,17 @@ export default function DashboardDaOng1({api}) {
     const [tipoMensagem, setTipoMensagem] = useState('');
     const [paginaProjetos, setPaginaProjetos] = useState(0);
     const [paginaAtualizacoes, setPaginaAtualizacoes] = useState(0);
-    const itensPorPagina = 3;
+
+    // Modal de exclusão
+    const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
+    const [itemParaExcluir, setItemParaExcluir] = useState(null);
+    const [tipoExclusao, setTipoExclusao] = useState('');
+
+    // Detectar se é mobile
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 426);
+
+    // Quantidade de itens por página (dinâmico)
+    const itensPorPagina = isMobile ? 1 : 3;
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -60,6 +70,13 @@ export default function DashboardDaOng1({api}) {
         if (nome) setNomeOng(nome);
         buscarProjetos();
         buscarAtualizacoes();
+
+        // Listener para redimensionamento
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 426);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     async function buscarProjetos() {
@@ -90,36 +107,41 @@ export default function DashboardDaOng1({api}) {
         } catch (error) { console.error('Erro:', error); }
     }
 
-    async function excluirProjeto(id) {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${api_url}/deletar_projeto/${id}?token=${token}`, { method: 'DELETE', credentials: 'include' });
-            if (response.status === 401) {
-                localStorage.clear();
-                localStorage.setItem('sessaoExpirada', 'Sua sessão expirou. Faça login novamente.');
-                navigate('/login');
-                return;
-            }
-            const data = await response.json();
-            setMensagem(data.message || data.error); setTipoMensagem(response.ok ? 'sucesso' : 'erro');
-            if (response.ok) buscarProjetos();
-        } catch (error) { setMensagem('Erro de conexão'); setTipoMensagem('erro'); }
+    function confirmarExcluirProjeto(projeto) {
+        setItemParaExcluir(projeto);
+        setTipoExclusao('projeto');
+        setModalExcluirAberto(true);
     }
 
-    async function excluirAtualizacao(id) {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${api_url}/deletar_atualizacao/${id}?token=${token}`, { method: 'DELETE', credentials: 'include' });
-            if (response.status === 401) {
-                localStorage.clear();
-                localStorage.setItem('sessaoExpirada', 'Sua sessão expirou. Faça login novamente.');
-                navigate('/login');
-                return;
-            }
-            const data = await response.json();
-            setMensagem(data.message || data.error); setTipoMensagem(response.ok ? 'sucesso' : 'erro');
-            if (response.ok) buscarAtualizacoes();
-        } catch (error) { setMensagem('Erro de conexão'); setTipoMensagem('erro'); }
+    function confirmarExcluirAtualizacao(atualizacao) {
+        setItemParaExcluir(atualizacao);
+        setTipoExclusao('atualizacao');
+        setModalExcluirAberto(true);
+    }
+
+    async function executarExclusao() {
+        setModalExcluirAberto(false);
+        if (tipoExclusao === 'projeto') {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${api_url}/deletar_projeto/${itemParaExcluir.id}?token=${token}`, { method: 'DELETE', credentials: 'include' });
+                const data = await response.json();
+                setMensagem(data.message || data.error);
+                setTipoMensagem(response.ok ? 'sucesso' : 'erro');
+                if (response.ok) buscarProjetos();
+            } catch (error) { setMensagem('Erro de conexão'); setTipoMensagem('erro'); }
+        } else if (tipoExclusao === 'atualizacao') {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${api_url}/deletar_atualizacao/${itemParaExcluir.id}?token=${token}`, { method: 'DELETE', credentials: 'include' });
+                const data = await response.json();
+                setMensagem(data.message || data.error);
+                setTipoMensagem(response.ok ? 'sucesso' : 'erro');
+                if (response.ok) buscarAtualizacoes();
+            } catch (error) { setMensagem('Erro de conexão'); setTipoMensagem('erro'); }
+        }
+        setItemParaExcluir(null);
+        setTipoExclusao('');
     }
 
     const sucesso = localStorage.getItem('sucesso');
@@ -137,6 +159,25 @@ export default function DashboardDaOng1({api}) {
             <section className={css.menulateral}><MenuLateral/></section>
             <div className={css.conteudo}>
                 <Mensagem tipo={tipoMensagem} texto={mensagem} onClose={() => setMensagem('')} />
+
+                {/* MODAL DE EXCLUSÃO */}
+                {modalExcluirAberto && (
+                    <div className={css.modalOverlay} onClick={() => setModalExcluirAberto(false)}>
+                        <div className={css.modal} onClick={(e) => e.stopPropagation()}>
+                            <h3 className={css.modalTitulo}>Confirmar Exclusão</h3>
+                            <p className={css.modalTexto}>
+                                Tem certeza que deseja excluir permanentemente{' '}
+                                <strong>{tipoExclusao === 'projeto' ? itemParaExcluir?.titulo : itemParaExcluir?.titulo}</strong>?
+                            </p>
+                            <p className={css.modalAviso}>Esta ação não pode ser desfeita.</p>
+                            <div className={css.modalBotoes}>
+                                <button className={css.modalBtnCancelar} onClick={() => setModalExcluirAberto(false)}>Cancelar</button>
+                                <button className={css.modalBtnExcluir} onClick={executarExclusao}>Sim, excluir</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className={css.Titulo}><Titulo titulo={`Olá,`} cor={'preto'} span={nomeOng} corSpan={'laranja-span'}/></div>
                 <p className={css.acoesRapidas}>Ações rápidas</p>
                 <div className={css.acoes}>
@@ -146,7 +187,7 @@ export default function DashboardDaOng1({api}) {
                 </div>
 
                 <div className={css.titulos}><Titulo titulo={'Projetos Ativos'} cor={'preto'}/></div>
-                <div className={css.cards}>
+                <div className={css.cardsAdm}>
                     {projetosPaginados.length === 0 ? <p>Nenhum projeto cadastrado</p> : projetosPaginados.map((projeto) => (
                         <div key={projeto.id} className={css.cardAdm}>
                             <div className={css.cardAdmTopo}>
@@ -158,21 +199,21 @@ export default function DashboardDaOng1({api}) {
                             <span className={css.cardAdmStatus} style={{ color: '#167cbf' }}>{projeto.status || 'Ativo'}</span>
                             <div className={css.cardAdmBotoes}>
                                 <button className={css.btnEditar} onClick={() => navigate(`/editarProjeto/${projeto.id}`)}>Editar projeto</button>
-                                <button className={css.btnExcluir} onClick={() => excluirProjeto(projeto.id)}>Excluir projeto</button>
+                                <button className={css.btnExcluir} onClick={() => confirmarExcluirProjeto(projeto)}>Excluir projeto</button>
                             </div>
                         </div>
                     ))}
                 </div>
                 {totalPaginasProjetos > 1 && (
                     <div className={css.paginacao}>
-                        <button onClick={() => setPaginaProjetos(p => p - 1)} disabled={paginaProjetos === 0}>←</button>
-                        <span>{paginaProjetos + 1} de {totalPaginasProjetos}</span>
-                        <button onClick={() => setPaginaProjetos(p => p + 1)} disabled={paginaProjetos === totalPaginasProjetos - 1}>→</button>
+                        <button className={css.botaoPagina} onClick={() => setPaginaProjetos(p => p - 1)} disabled={paginaProjetos === 0}>←</button>
+                        <span className={css.paginaInfo}>{paginaProjetos + 1} de {totalPaginasProjetos}</span>
+                        <button className={css.botaoPagina} onClick={() => setPaginaProjetos(p => p + 1)} disabled={paginaProjetos === totalPaginasProjetos - 1}>→</button>
                     </div>
                 )}
 
                 <div className={css.titulos}><Titulo titulo={'Últimas atualizações'} cor={'preto'}/></div>
-                <div className={css.cards}>
+                <div className={css.cardsAdm}>
                     {atualizacoesPaginadas.length === 0 ? <p>Nenhuma atualização</p> : atualizacoesPaginadas.map((atualizacao) => (
                         <div key={atualizacao.id} className={css.cardAdm}>
                             <div className={css.cardAdmTopo}>
@@ -184,16 +225,16 @@ export default function DashboardDaOng1({api}) {
                             <span className={css.cardAdmStatus} style={{ color: '#167cbf' }}>{atualizacao.data || 'Sem data'}</span>
                             <div className={css.cardAdmBotoes}>
                                 <button className={css.btnEditar} onClick={() => navigate(`/editarAtualizacao/${atualizacao.id}`)}>Editar atualização</button>
-                                <button className={css.btnExcluir} onClick={() => excluirAtualizacao(atualizacao.id)}>Excluir atualização</button>
+                                <button className={css.btnExcluir} onClick={() => confirmarExcluirAtualizacao(atualizacao)}>Excluir atualização</button>
                             </div>
                         </div>
                     ))}
                 </div>
                 {totalPaginasAtualizacoes > 1 && (
                     <div className={css.paginacao}>
-                        <button onClick={() => setPaginaAtualizacoes(p => p - 1)} disabled={paginaAtualizacoes === 0}>←</button>
-                        <span>{paginaAtualizacoes + 1} de {totalPaginasAtualizacoes}</span>
-                        <button onClick={() => setPaginaAtualizacoes(p => p + 1)} disabled={paginaAtualizacoes === totalPaginasAtualizacoes - 1}>→</button>
+                        <button className={css.botaoPagina} onClick={() => setPaginaAtualizacoes(p => p - 1)} disabled={paginaAtualizacoes === 0}>←</button>
+                        <span className={css.paginaInfo}>{paginaAtualizacoes + 1} de {totalPaginasAtualizacoes}</span>
+                        <button className={css.botaoPagina} onClick={() => setPaginaAtualizacoes(p => p + 1)} disabled={paginaAtualizacoes === totalPaginasAtualizacoes - 1}>→</button>
                     </div>
                 )}
             </div>
