@@ -63,12 +63,15 @@
 @media (max-width: 768px) {
     .container {
         height: auto;
-        position: relative;
+        position: sticky !important;
+        top: 80vh;
+        width: 100%;
         padding: 1.5rem;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
         gap: 1rem;
+        background-color: white;
     }
 
     .funcoes {
@@ -77,5 +80,14 @@
 
     .funcoes h2 {
         font-size: 0.9rem;
+    }
+
+    .desktop {
+        display: none;
+    }
+
+    .funcoes img {
+        width: 3rem;
+        height: auto
     }
 }
