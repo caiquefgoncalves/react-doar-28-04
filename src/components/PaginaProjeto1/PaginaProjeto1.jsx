@@ -11,6 +11,7 @@ export default function PaginaProjeto1({ api }) {
     const [ong, setOng] = useState(null);
     const [atualizacoes, setAtualizacoes] = useState([]);
     const [qtd, setQtd] = useState("");
+    const [idsAbertos, setIdsAbertos] = useState("");
     const [loading, setLoading] = useState(true);
     const api_url = api;
 
@@ -127,7 +128,15 @@ export default function PaginaProjeto1({ api }) {
                             <div className={css.secaoBox}>
                                 <div className={css.headerAtualizacoes}>
                                     <Titulo titulo={'Últimas atualizações'} cor={'preto'}/>
-                                    <p className={css.texto}>{qtd} atualizações</p>
+                                    {qtd == 0 && (
+                                        <p className={css.texto}>Não há atualizações</p>
+                                    )}
+                                    {qtd == 1 && (
+                                        <p className={css.texto}>{qtd} atualização</p>
+                                    )}
+                                    {qtd > 1 && (
+                                        <p className={css.texto}>{qtd} atualizações</p>
+                                    )}
                                 </div>
                                 <div className={css.atualizacoesLista}>
                                     {atualizacoesPaginadas.map(att => (
@@ -141,7 +150,23 @@ export default function PaginaProjeto1({ api }) {
                                                 />
                                             )}
                                             <h3 className={css.attTitulo}>{att.titulo}</h3>
-                                            {att.texto && <p className={css.attTexto}>{att.texto}</p>}
+                                            {att.texto && (
+                                                <p className={css.attTexto}>
+                                                    {/* Só corta e coloca "..." se o texto for maior que 100 E não estiver aberto */}
+                                                    {idsAbertos === att.id || att.texto.length <= 100
+                                                        ? att.texto
+                                                        : att.texto.substring(0, 100) + "..."}
+
+                                                    {/* O botão só aparece se o texto for maior que 100 caracteres */}
+                                                    {att.texto.length > 100 && (
+                                                        <button
+                                                            onClick={() => setIdsAbertos(idsAbertos === att.id ? null : att.id)}
+                                                            className={css.btnDoar}>
+                                                            {idsAbertos === att.id ? "Ler menos" : "Ler mais"}
+                                                        </button>
+                                                    )}
+                                                </p>
+                                            )}
                                         </div>
                                     ))}
                                 </div>

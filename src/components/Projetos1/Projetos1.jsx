@@ -6,13 +6,14 @@ import Titulo from "../Titulo/Titulo.jsx";
 import css from './Projetos1.module.css'
 
 
-export default function Projetos() {
+export default function Projetos({api}) {
+    const api_url = api
     const [projetos, setProjetos] = useState([]);
     const [todosProjetos, setTodosProjetos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [busca, setBusca] = useState('');
     const [statusFiltro, setStatusFiltro] = useState('todos');
-    const API_URL = 'http://10.92.3.167:5000';
+
 
     useEffect(() => {
         buscarProjetos();
@@ -21,7 +22,7 @@ export default function Projetos() {
     async function buscarProjetos() {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_URL}/listar_projetos_publicos?token=${token || ''}`, { credentials: 'include' });
+            const response = await fetch(`${api_url}/listar_projetos_publicos?token=${token || ''}`, { credentials: 'include' });
             if (response.ok) {
                 const data = await response.json();
                 if (data.projetos) {
@@ -82,7 +83,7 @@ export default function Projetos() {
                     ) : (
                         projetos.map(projeto => (
                             <Link to={`/projeto/${projeto.id}`} key={projeto.id} className={css.card}>
-                                <img src={projeto.foto ? `${API_URL}/uploads/Projetos/${projeto.foto}` : '/projeto-default.png'} alt={projeto.titulo} className={css.cardImagem} onError={(e) => { e.target.src = '/projeto-default.png'; }} />
+                                <img src={projeto.foto ? `${api_url}/uploads/Projetos/${projeto.foto}` : '/projeto-default.png'} alt={projeto.titulo} className={css.cardImagem} onError={(e) => { e.target.src = '/projeto-default.png'; }} />
                                 <div className={css.cardInfo}>
                                     <h3 className={css.cardNome}>{projeto.titulo}</h3>
                                     <p className={css.cardDesc}>{projeto.descricao?.substring(0, 80)}...</p>

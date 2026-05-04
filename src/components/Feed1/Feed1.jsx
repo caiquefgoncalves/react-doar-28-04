@@ -5,13 +5,13 @@ import MenuLateral from "../MenuLateral/MenuLateral.jsx";
 import css from "./Feed1.module.css";
 import Curtida from "../Curtida/Curtida.jsx";
 
-export default function Feed() {
+export default function Feed({api}) {
     const [atualizacoes, setAtualizacoes] = useState([]);
     const [todasAtualizacoes, setTodasAtualizacoes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [busca, setBusca] = useState('');
     const [filtro, setFiltro] = useState('recentes');
-    const API_URL = 'http://10.92.3.167:5000';
+    const api_url = api
 
     useEffect(() => {
         buscarAtualizacoes();
@@ -21,7 +21,7 @@ export default function Feed() {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const url = `${API_URL}/feed_atualizacoes?filtro=${filtro}&token=${token || ''}`;
+            const url = `${api_url}/feed_atualizacoes?filtro=${filtro}&token=${token || ''}`;
             console.log('Buscando:', url);
 
             const response = await fetch(url, { credentials: 'include' });
@@ -126,7 +126,7 @@ export default function Feed() {
                             {/* Cabeçalho da ONG */}
                             <Link to={`/ong/${item.ong_id}`} className={css.header}>
                                 <img
-                                    src={item.ong_foto ? `${API_URL}/uploads/Usuarios/${item.ong_foto}` : '/ong-icon.png'}
+                                    src={item.ong_foto ? `${api_url}/uploads/Usuarios/${item.ong_foto}` : '/ong-icon.png'}
                                     alt={item.ong_nome}
                                     className={css.fotoOng}
                                     onError={(e) => { e.target.src = '/ong-icon.png'; }}
@@ -142,7 +142,7 @@ export default function Feed() {
                             <div className={css.corpo}>
                                 {item.foto && (
                                     <img
-                                        src={`${API_URL}/uploads/Atualizacoes/${item.foto}`}
+                                        src={`${api_url}/uploads/Atualizacoes/${item.foto}`}
                                         alt=""
                                         className={css.fotoAtualizacao}
                                     />

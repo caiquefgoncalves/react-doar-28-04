@@ -17,7 +17,7 @@ function decodificarToken(token) {
 }
 
 export default function DashboardAdm1({api}) {
-    const api_url = api
+    const api_url = api;
     const navigate = useNavigate();
     const [nomeADM, setNomeADM] = useState('');
     const [ongs, setOngs] = useState([]);
@@ -26,23 +26,21 @@ export default function DashboardAdm1({api}) {
     const [tipoMensagem, setTipoMensagem] = useState('');
     const [autorizado, setAutorizado] = useState(false);
 
+    // Modal de confirmação
+    const [modalAberto, setModalAberto] = useState(false);
+    const [itemParaExcluir, setItemParaExcluir] = useState(null);
+    const [tipoExclusao, setTipoExclusao] = useState(''); // 'ong' ou 'doador'
+
     const [paginaOngs, setPaginaOngs] = useState(0);
     const ongsPorPagina = 3;
     const [paginaDoadores, setPaginaDoadores] = useState(0);
     const doadoresPorPagina = 3;
 
-
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) { navigate('/login'); return; }
-
         const tokenData = decodificarToken(token);
-        if (!tokenData || tokenData.tipo !== 0) {
-            localStorage.clear();
-            navigate('/login');
-            return;
-        }
-
+        if (!tokenData || tokenData.tipo !== 0) { localStorage.clear(); navigate('/login'); return; }
         setAutorizado(true);
         const nome = localStorage.getItem('nome');
         if (nome) setNomeADM(nome);
@@ -53,27 +51,17 @@ export default function DashboardAdm1({api}) {
     async function buscarOngs() {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${api_url}/admin/listar_ongs?token=${token}`, {
-                method: 'GET', credentials: 'include',
-            });
+            const response = await fetch(`${api_url}/admin/listar_ongs?token=${token}`, { method: 'GET', credentials: 'include' });
             if (response.status === 401) { localStorage.clear(); navigate('/login'); return; }
-            if (response.ok) {
-                const data = await response.json();
-                if (data.ongs) setOngs(data.ongs);
-            }
+            if (response.ok) { const data = await response.json(); if (data.ongs) setOngs(data.ongs); }
         } catch (error) { console.error('Erro:', error); }
     }
 
     async function buscarDoadores() {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${api_url}/listar_usuarios?token=${token}`, {
-                method: 'GET', credentials: 'include',
-            });
-            if (response.ok) {
-                const data = await response.json();
-                if (data.usuarios) setDoadores(data.usuarios.filter(u => u[17] === 1));
-            }
+            const response = await fetch(`${api_url}/listar_usuarios?token=${token}`, { method: 'GET', credentials: 'include' });
+            if (response.ok) { const data = await response.json(); if (data.usuarios) setDoadores(data.usuarios.filter(u => u[17] === 1)); }
         } catch (error) { console.error('Erro:', error); }
     }
 
@@ -82,8 +70,7 @@ export default function DashboardAdm1({api}) {
         try {
             const token = localStorage.getItem('token');
             const response = await fetch(`${api_url}/admin/bloquear_ong/${ong.id}?token=${token}`, {
-                method: 'PUT', headers: { 'Content-Type': 'application/json' },
-                credentials: 'include', body: JSON.stringify({ acao })
+                method: 'PUT', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify({ acao })
             });
             const data = await response.json();
             setMensagem(data.message || data.error);
@@ -92,12 +79,36 @@ export default function DashboardAdm1({api}) {
         } catch (error) { setMensagem('Erro de conexão'); setTipoMensagem('erro'); }
     }
 
+    // Abrir modal de confirmação para ONG
+    function confirmarExcluirOng(ong) {
+        setItemParaExcluir(ong);
+        setTipoExclusao('ong');
+        setModalAberto(true);
+    }
+
+    // Abrir modal de confirmação para Doador
+    function confirmarExcluirDoador(doador) {
+        setItemParaExcluir(doador);
+        setTipoExclusao('doador');
+        setModalAberto(true);
+    }
+
+    // Executar exclusão
+    async function executarExclusao() {
+        setModalAberto(false);
+        if (tipoExclusao === 'ong') {
+            await deletarOng(itemParaExcluir);
+        } else if (tipoExclusao === 'doador') {
+            await deletarDoador(itemParaExcluir);
+        }
+        setItemParaExcluir(null);
+        setTipoExclusao('');
+    }
+
     async function deletarOng(ong) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${api_url}/admin/deletar_ong/${ong.id}?token=${token}`, {
-                method: 'DELETE', credentials: 'include',
-            });
+            const response = await fetch(`${api_url}/admin/deletar_ong/${ong.id}?token=${token}`, { method: 'DELETE', credentials: 'include' });
             const data = await response.json();
             setMensagem(data.message || data.error);
             setTipoMensagem(response.ok ? 'sucesso' : 'erro');
@@ -109,9 +120,7 @@ export default function DashboardAdm1({api}) {
         const endpoint = doador[15] === 1 ? 'inativar' : 'ativar';
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${api_url}/${endpoint}_usuarios/${doador[0]}?token=${token}`, {
-                method: 'PUT', credentials: 'include',
-            });
+            const response = await fetch(`${api_url}/${endpoint}_usuarios/${doador[0]}?token=${token}`, { method: 'PUT', credentials: 'include' });
             const data = await response.json();
             setMensagem(data.message || data.error);
             setTipoMensagem(response.ok ? 'sucesso' : 'erro');
@@ -122,9 +131,7 @@ export default function DashboardAdm1({api}) {
     async function deletarDoador(doador) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${api_url}/deletar_usuarios/${doador[0]}?token=${token}`, {
-                method: 'DELETE', credentials: 'include',
-            });
+            const response = await fetch(`${api_url}/deletar_usuarios/${doador[0]}?token=${token}`, { method: 'DELETE', credentials: 'include' });
             const data = await response.json();
             setMensagem(data.message || data.error);
             setTipoMensagem(response.ok ? 'sucesso' : 'erro');
@@ -144,9 +151,7 @@ export default function DashboardAdm1({api}) {
     }
 
     const sucesso = localStorage.getItem('sucesso');
-    useEffect(() => {
-        if (sucesso) { setMensagem(sucesso); setTipoMensagem('sucesso'); localStorage.removeItem('sucesso'); }
-    }, [sucesso]);
+    useEffect(() => { if (sucesso) { setMensagem(sucesso); setTipoMensagem('sucesso'); localStorage.removeItem('sucesso'); } }, [sucesso]);
 
     if (!autorizado) return null;
 
@@ -157,11 +162,30 @@ export default function DashboardAdm1({api}) {
 
     return (
         <section className={css.secao}>
-            <section className={css.menulateral}>
-                <MenuLateral/>
-            </section>
+            <section className={css.menulateral}><MenuLateral/></section>
             <div className={css.conteudo}>
                 <Mensagem tipo={tipoMensagem} texto={mensagem} onClose={() => setMensagem('')} />
+
+                {/* MODAL DE CONFIRMAÇÃO */}
+                {modalAberto && (
+                    <div className={css.modalOverlay} onClick={() => setModalAberto(false)}>
+                        <div className={css.modal} onClick={(e) => e.stopPropagation()}>
+                            <h3 className={css.modalTitulo}>Confirmar Exclusão</h3>
+                            <p className={css.modalTexto}>
+                                Tem certeza que deseja excluir permanentemente{' '}
+                                <strong>
+                                    {tipoExclusao === 'ong' ? itemParaExcluir?.nome : itemParaExcluir?.[1]}
+                                </strong>?
+                            </p>
+                            <p className={css.modalAviso}>Esta ação não pode ser desfeita.</p>
+                            <div className={css.modalBotoes}>
+                                <button className={css.modalBtnCancelar} onClick={() => setModalAberto(false)}>Cancelar</button>
+                                <button className={css.modalBtnExcluir} onClick={executarExclusao}>Sim, excluir</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div><Titulo titulo={`Olá, ${nomeADM || 'Administrador'}`} /></div>
                 <Titulo titulo={'Ações Rápidas'} cor={'preto'}/>
                 <div className={css.acoes}>
@@ -184,7 +208,7 @@ export default function DashboardAdm1({api}) {
                                         {ong.ativo ? 'Inativar ONG' : 'Ativar ONG'}
                                     </button>
                                     {(ong.codigo_aprovacao === 2 || !ong.ativo) && (
-                                        <button className={css.btnExcluir} onClick={() => deletarOng(ong)}>Excluir ONG</button>
+                                        <button className={css.btnExcluir} onClick={() => confirmarExcluirOng(ong)}>Excluir ONG</button>
                                     )}
                                 </div>
                             </div>
@@ -206,15 +230,13 @@ export default function DashboardAdm1({api}) {
                                 <img src={getImagemUrl(doador[0])} alt={doador[1]} className={css.cardAdmImagem} onError={(e) => { e.target.src = '/doador-icon.png'; }} />
                                 <h3 className={css.cardAdmNome}>{doador[1]}</h3>
                             </div>
-                            <span className={css.cardAdmStatus} style={{ color: doador[15] === 1 ? '#167cbf' : '#f65682' }}>
-                                {doador[15] === 1 ? 'Ativo' : 'Inativo'}
-                            </span>
+                            <span className={css.cardAdmStatus} style={{ color: doador[15] === 1 ? '#167cbf' : '#f65682' }}>{doador[15] === 1 ? 'Ativo' : 'Inativo'}</span>
                             <div className={css.cardAdmBotoes}>
                                 <button className={css.btnEditar} onClick={() => navigate(`/editarDoador/${doador[0]}`)}>Editar Doador</button>
                                 <button className={doador[15] === 1 ? css.btnInativar : css.btnAtivar} onClick={() => toggleStatusDoador(doador)}>
                                     {doador[15] === 1 ? 'Inativar Doador' : 'Ativar Doador'}
                                 </button>
-                                <button className={css.btnExcluir} onClick={() => deletarDoador(doador)}>Excluir Doador</button>
+                                <button className={css.btnExcluir} onClick={() => confirmarExcluirDoador(doador)}>Excluir Doador</button>
                             </div>
                         </div>
                     ))}

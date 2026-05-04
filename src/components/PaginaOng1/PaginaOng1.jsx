@@ -83,9 +83,14 @@ export default function PaginaOng1({api}) {
                                 <Titulo titulo={'Projetos Ativos'} cor={'preto'}/>
                                 <div className={css.projetosLista}>
                                     {projetos.map(proj => (
-                                        <Link to={`/projeto/${proj.id}`} key={proj.id} className={css.cardProjeto}>
-                                            <h3>{proj.titulo}</h3>
-                                            <p>{proj.descricao?.substring(0, 100)}...</p>
+                                        <Link to={`/projeto/${proj.id}`} key={proj.id} className={css.atualizacao}>
+                                            <img     className={css.attImagem}
+                                                     src={`${api_url}/uploads/Projeto/${proj.id}`}
+                                                     alt={proj.titulo}
+                                                     onError={(e) => { e.target.onerror = null; e.target.src = '/atualizacao-default.png'; }}
+                                            />
+                                            <h3 className={css.attTitulo}>{proj.titulo}</h3>
+                                            <p className={css.attTexto}>{proj.descricao?.substring(0, 100)}...</p>
                                             <span className={css.tipoAjuda}>{proj.tipo_ajuda}</span>
                                         </Link>
                                     ))}
@@ -117,7 +122,7 @@ export default function PaginaOng1({api}) {
                         )}
                     </div>
 
-                    {/* Coluna Direita - Apoie a ONG */}
+
                     <div className={css.colunaDireita}>
                         <div className={css.cardApoie}>
                             <Titulo titulo={`Apoie o ${ong.nome} diretamente!`} cor={'preto'}/>

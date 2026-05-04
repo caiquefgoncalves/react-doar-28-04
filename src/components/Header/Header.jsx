@@ -52,7 +52,7 @@ export default function Header() {
         try {
             const token = localStorage.getItem('token');
 
-            await fetch(`http://10.92.3.144:5000/logout?token=${token}`, {
+            await fetch(`http://10.92.3.137:5000/logout?token=${token}`, {
                 method: 'POST',
                 credentials: 'include',
             });

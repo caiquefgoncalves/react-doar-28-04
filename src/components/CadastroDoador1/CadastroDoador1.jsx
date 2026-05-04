@@ -43,6 +43,7 @@ export default function CadastroDoador1({api}) {
             setMensagem({ texto: 'A foto de perfil é obrigatória', tipo: 'erro' });
             return;
         }
+        form.append('foto_perfil', fotoPerfil);
 
         try {
             let retorno = await fetch(`${api_url}/criar_usuarios`, {

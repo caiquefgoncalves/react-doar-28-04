@@ -14,7 +14,6 @@ export default function Ongs({api}) {
     const [busca, setBusca] = useState('');
     const [categoriaFiltro, setCategoriaFiltro] = useState('todas');
 
-
     useEffect(() => {
         buscarOngs();
     }, []);
@@ -59,12 +58,13 @@ export default function Ongs({api}) {
             <MenuLateral/>
             <div className={css.conteudo}>
 
+                <Titulo titulo={'ONGs'} cor={'preto'} />
 
                 <div className={css.barraTopo}>
-                    <div className={css.buscaInput}>
-                        <input type="text" placeholder="Buscar por ONG..." value={busca} onChange={(e) => setBusca(e.target.value)} className={css.inputBusca} />
-                        <button className={css.btnBuscar}></button>
-                    </div>
+                        <div className={css.buscaInput}>
+                            <input type="text" placeholder="Buscar por ONG..." value={busca} onChange={(e) => setBusca(e.target.value)} className={css.inputBusca} />
+                            <button className={css.btnBuscar}></button>
+                        </div>
                     <div className={css.filtro}>
                         <span>Filtrar por:</span>
                         <select value={categoriaFiltro} onChange={(e) => setCategoriaFiltro(e.target.value)} className={css.selectFiltro}>
@@ -76,7 +76,7 @@ export default function Ongs({api}) {
                     </div>
                 </div>
 
-                <p style={{ fontSize: '14px', color: '#666', margin: 0 }}>{ongs.length} ONG(s) encontrada(s)</p>
+                <p style={{ fontSize: '14px', color: '#666', margin: '0 0 15px 0' }}>{ongs.length} ONG(s) encontrada(s)</p>
 
                 <div className={css.cardsContainer}>
                     {ongs.length === 0 ? (
@@ -84,18 +84,24 @@ export default function Ongs({api}) {
                     ) : (
                         ongs.map(ong => (
                             <Link to={`/ong/${ong.id}`} key={ong.id} className={css.card}>
-                                <img src={`${api_url}/uploads/Usuarios/${ong.id}`} alt={ong.nome} className={css.cardImagem} onError={(e) => { e.target.src = '/ong-icon.png'; }} />
+                                <img
+                                    src={ong.foto ? `${api_url}/uploads/Usuarios/${ong.foto}` : '/ong-icon.png'}
+                                    alt={ong.nome}
+                                    className={css.cardImagem}
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = '/ong-icon.png';
+                                    }}
+                                />
                                 <div className={css.cardInfo}>
                                     <h3 className={css.cardNome}>{ong.nome}</h3>
                                     <p className={css.cardDesc}>{ong.descricao_breve?.substring(0, 80) || 'Sem descrição'}...</p>
-                                    <p className={css.cardCategoria}>{ong.categoria || 'ONG'}</p>
+                                    <span className={css.cardCategoria}>{ong.categoria || 'ONG'}</span>
                                 </div>
                                 <Curtida/>
                             </Link>
-
                         ))
                     )}
-
                 </div>
             </div>
         </section>
