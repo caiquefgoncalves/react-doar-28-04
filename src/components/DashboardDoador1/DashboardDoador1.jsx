@@ -53,7 +53,7 @@ export default function DashboardDoador1({ api }) {
             <section className={css.menulateral}><MenuLateral/></section>
             <div className={css.conteudo}>
                 <Mensagem tipo={tipoMensagem} texto={mensagem} onClose={() => setMensagem('')} />
-                <div className={css.Titulo}><Titulo titulo={`Olá,`} cor={'preto'} span={nomeDoador} corSpan={'rosa-span'}/></div>
+                <div className={css.Titulo}><Titulo titulo={`Olá,`} cor={'saudacao'} span={nomeDoador} corSpan={'rosa-span'}/></div>
                 <p className={css.acoesRapidas}>Ações rápidas</p>
                 <div className={css.acoes}>
                     <Acoes cor={'amarelo'} texto={'Editar perfil'} pagina={`/editarDoador/${idDoador}`}/>

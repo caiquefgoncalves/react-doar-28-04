@@ -42,7 +42,7 @@ export default function Header() {
         } else if (tipoUsuario === 2) {
             navigate('/dashboardOng');
         } else if (tipoUsuario === 1) {
-            navigate('/dashboard');
+            navigate('/dashboardDoador');
         } else {
             navigate('/dashboard');
         }
@@ -130,9 +130,13 @@ export default function Header() {
                                 <li><a href="/" className={css.linkMobile}>Benefícios</a></li>
                                 <li><a href="/" className={css.linkMobile}>Junte-se a nós!</a></li>
                                 <li><Link to="/feed" className={css.linkMobile}>ONGs e projetos</Link></li>
-                                <li><Link to={"/cadastroOng"} className={css.linkMobile}>Cadastro</Link></li>
-                                <li><Link to={"/login"} className={css.linkMobile}>Login</Link></li>
                                 <li>
+                                    <img
+                                        src="/perfil.png"
+                                        onClick={irParaPerfil}
+                                        style={{cursor: 'pointer', marginRight: '15px'}}
+                                        alt="Perfil"
+                                    />
                                     <button
                                         onClick={fazerLogout}
                                         className={css.btnSairMobile}

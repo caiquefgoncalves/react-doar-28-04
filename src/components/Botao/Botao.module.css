@@ -118,8 +118,16 @@
     transform: scale(1.02);
 }
 
-.curtida{
-
+.seguir{
+    background-color: transparent;
+    border: 1px solid  #0f5e94;
+    border-radius: 2rem;
+    padding: 0.3rem 1rem;
+    color: #1a7bb7;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 @media (max-width: 480px) {
     .amarelo, .vazado, .rosa {

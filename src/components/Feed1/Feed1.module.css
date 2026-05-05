@@ -233,4 +233,14 @@ span{
     .barraTopo { flex-direction: column; align-items: stretch; }
     .buscaInput { max-width: 100%; }
     .card { width: 100%; }
+
+    .corpo {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .corpo img {
+        width: 15rem;
+        height: auto;
+    }
 }

@@ -1,6 +1,6 @@
 // src/components/DashboardAdm1/DashboardAdm1.jsx
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Titulo from "../Titulo/Titulo.jsx";
 import css from "../DashboardAdm1/DashboardAdm1.module.css";
 import Acoes from "../Acoes/Acoes.jsx";
@@ -33,7 +33,7 @@ export default function DashboardAdm1({api}) {
 
     // Modal de bloqueio/desbloqueio
     const [modalBloqueioAberto, setModalBloqueioAberto] = useState(false);
-    const [ongParaBloquear, setOngParaBloquear] = useState(null);
+    const [usuarioParaBloquear, setUsuarioParaBloquear] = useState(null);
     const [motivoBloqueio, setMotivoBloqueio] = useState('');
 
     const [paginaOngs, setPaginaOngs] = useState(0);
@@ -82,32 +82,38 @@ export default function DashboardAdm1({api}) {
         } catch (error) { console.error('Erro:', error); }
     }
 
-    function abrirModalBloqueio(ong) {
-        setOngParaBloquear(ong);
+    function abrirModalBloqueio(usuario, tipoUsuario = 'ong') {
+        setUsuarioParaBloquear({
+            ...usuario,
+            tipoUsuario: tipoUsuario
+        });
         setMotivoBloqueio('');
         setModalBloqueioAberto(true);
     }
 
     async function executarBloqueio() {
-        if (ongParaBloquear?.ativo && !motivoBloqueio.trim()) {
+        if (usuarioParaBloquear?.ativo && !motivoBloqueio.trim()) {
             setMensagem('Informe o motivo do bloqueio');
             setTipoMensagem('erro');
             return;
         }
         setModalBloqueioAberto(false);
-        const acao = ongParaBloquear?.ativo ? 'bloquear' : 'desbloquear';
+        const acao = usuarioParaBloquear?.ativo ? 'bloquear' : 'desbloquear';
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${api_url}/admin/bloquear_ong/${ongParaBloquear.id}?token=${token}`, {
+            const response = await fetch(`${api_url}/admin/bloquear/${usuarioParaBloquear.id}?token=${token}`, {
                 method: 'PUT', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
                 body: JSON.stringify({ acao, motivo: motivoBloqueio })
             });
             const data = await response.json();
             setMensagem(data.message || data.error);
             setTipoMensagem(response.ok ? 'sucesso' : 'erro');
-            if (response.ok) buscarOngs();
+            if (response.ok) {
+                buscarOngs();
+                buscarDoadores();
+            }
         } catch (error) { setMensagem('Erro de conexão'); setTipoMensagem('erro'); }
-        setOngParaBloquear(null);
+        setUsuarioParaBloquear(null);
         setMotivoBloqueio('');
     }
 
@@ -148,17 +154,6 @@ export default function DashboardAdm1({api}) {
         setTipoExclusao('');
     }
 
-    async function toggleStatusDoador(doador) {
-        const endpoint = doador[15] === 1 ? 'inativar' : 'ativar';
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${api_url}/${endpoint}_usuarios/${doador[0]}?token=${token}`, { method: 'PUT', credentials: 'include' });
-            const data = await response.json();
-            setMensagem(data.message || data.error);
-            setTipoMensagem(response.ok ? 'sucesso' : 'erro');
-            if (response.ok) buscarDoadores();
-        } catch (error) { setMensagem('Erro de conexão'); setTipoMensagem('erro'); }
-    }
 
     function getCorStatus(codigo) {
         if (codigo === 0) return { cor: '#f7b567', texto: 'Pendente' };
@@ -203,20 +198,23 @@ export default function DashboardAdm1({api}) {
                     </div>
                 )}
 
-                {/* MODAL DE BLOQUEIO (MESMO ESTILO DO MOTIVO DE REPROVAÇÃO) */}
+                {/* MODAL DE BLOQUEIO/DESBLOQUEIO */}
                 {modalBloqueioAberto && (
                     <div className={css.modalOverlay} onClick={() => setModalBloqueioAberto(false)}>
                         <div className={css.modal} onClick={(e) => e.stopPropagation()}>
                             <h3 className={css.modalTitulo}>
-                                {ongParaBloquear?.ativo ? ' Bloquear ONG' : ' Desbloquear ONG'}
+                                {usuarioParaBloquear?.ativo ? '🔒 Bloquear ' : '🔓 Desbloquear '}
+                                {usuarioParaBloquear?.tipoUsuario === 'ong' ? 'ONG' : 'Doador'}
                             </h3>
-                            <p className={css.modalTexto}><strong>{ongParaBloquear?.nome}</strong></p>
+                            <p className={css.modalTexto}>
+                                <strong>{usuarioParaBloquear?.nome}</strong>
+                            </p>
 
-                            {ongParaBloquear?.ativo && (
+                            {usuarioParaBloquear?.ativo && (
                                 <div className={css.motivoReprovacao}>
                                     <textarea
                                         className={css.modalTextarea}
-                                        placeholder="Descreva o motivo do bloqueio..."
+                                        placeholder={`Descreva o motivo do bloqueio do ${usuarioParaBloquear?.tipoUsuario === 'ong' ? 'ONG' : 'doador'}...`}
                                         value={motivoBloqueio}
                                         onChange={(e) => setMotivoBloqueio(e.target.value)}
                                         rows={4}
@@ -224,21 +222,23 @@ export default function DashboardAdm1({api}) {
                                 </div>
                             )}
 
-                            {!ongParaBloquear?.ativo && (
-                                <p className={css.modalSubtexto}>Deseja realmente desbloquear esta ONG?</p>
+                            {!usuarioParaBloquear?.ativo && (
+                                <p className={css.modalSubtexto}>
+                                    Deseja realmente desbloquear este {usuarioParaBloquear?.tipoUsuario === 'ong' ? 'ONG' : 'doador'}?
+                                </p>
                             )}
 
                             <div className={css.modalBotoes}>
                                 <button className={css.modalBtnCancelar} onClick={() => setModalBloqueioAberto(false)}>Cancelar</button>
-                                <button className={ongParaBloquear?.ativo ? css.modalBtnExcluir : css.modalBtnAtivar} onClick={executarBloqueio}>
-                                    {ongParaBloquear?.ativo ? 'Confirmar' : 'Confirmar'}
+                                <button className={usuarioParaBloquear?.ativo ? css.modalBtnExcluir : css.modalBtnAtivar} onClick={executarBloqueio}>
+                                    Confirmar
                                 </button>
                             </div>
                         </div>
                     </div>
                 )}
 
-                <div className={css.Titulo}><Titulo titulo={`Olá,`} cor={'preto'} span={nomeADM} /></div>
+                <div className={css.Titulo}><Titulo titulo={`Olá,`} cor={'saudacao'} span={nomeADM} /></div>
                 <p className={css.acoesRapidas}>Ações rápidas</p>
                 <div className={css.acoes}><Acoes cor={'amarelo'} texto={'Aprovar ONGs'} pagina={'/listaAprovacoes'}/></div>
 
@@ -256,13 +256,49 @@ export default function DashboardAdm1({api}) {
                                 </div>
                                 <span className={css.cardAdmStatus} style={{ color: status.cor }}>{status.texto}</span>
                                 <div className={css.cardAdmBotoes}>
-                                    <button className={css.btnEditar} onClick={() => navigate(`/editarOng/${ong.id}`)}>Editar ONG</button>
-                                    <button className={ong.ativo ? css.btnInativar : css.btnAtivar} onClick={() => abrirModalBloqueio(ong)}>
-                                        {ong.ativo ? 'Bloquear ONG' : 'Desbloquear ONG'}
-                                    </button>
-                                    {(ong.codigo_aprovacao === 2 || !ong.ativo) && (
-                                        <button className={css.btnExcluir} onClick={() => confirmarExcluirOng(ong)}>Excluir ONG</button>
+
+                                    {/* PENDENTE → só aprovar */}
+                                    {ong.codigo_aprovacao === 0 ? (
+                                        <button
+                                            className={css.btnAtivar}
+                                            onClick={() => navigate(`/listaAprovacoes`)}
+                                        >
+                                            Aprovar ONG
+                                        </button>
+                                    ) : (
+                                        <>
+                                            <button
+                                                className={css.btnEditar}
+                                                onClick={() => navigate(`/editarOng/${ong.id}`)}
+                                            >
+                                                Editar ONG
+                                            </button>
+
+                                            <button
+                                                className={ong.ativo ? css.btnInativar : css.btnAtivar}
+                                                onClick={() => abrirModalBloqueio(
+                                                    {
+                                                        id: ong.id,
+                                                        nome: ong.nome,
+                                                        ativo: ong.ativo
+                                                    },
+                                                    'ong'
+                                                )}
+                                            >
+                                                {ong.ativo ? 'Bloquear ONG' : 'Desbloquear ONG'}
+                                            </button>
+
+                                            {ong.codigo_aprovacao === 2 && (
+                                                <button
+                                                    className={css.btnExcluir}
+                                                    onClick={() => confirmarExcluirOng(ong)}
+                                                >
+                                                    Excluir ONG
+                                                </button>
+                                            )}
+                                        </>
                                     )}
+
                                 </div>
                             </div>
                         );
@@ -288,11 +324,38 @@ export default function DashboardAdm1({api}) {
                             </div>
                             <span className={css.cardAdmStatus} style={{ color: doador[15] === 1 ? '#167cbf' : '#f65682' }}>{doador[15] === 1 ? 'Ativo' : 'Inativo'}</span>
                             <div className={css.cardAdmBotoes}>
-                                <button className={css.btnEditar} onClick={() => navigate(`/editarDoador/${doador[0]}`)}>Editar Doador</button>
-                                <button className={doador[15] === 1 ? css.btnInativar : css.btnAtivar} onClick={() => toggleStatusDoador(doador)}>
-                                    {doador[15] === 1 ? 'Inativar Doador' : 'Ativar Doador'}
+
+                                <button
+                                    className={css.btnEditar}
+                                    onClick={() => navigate(`/editarDoador/${doador[0]}`)}
+                                >
+                                    Editar Doador
                                 </button>
-                                <button className={css.btnExcluir} onClick={() => confirmarExcluirDoador(doador)}>Excluir Doador</button>
+
+                                <button
+                                    className={doador[15] === 1 ? css.btnInativar : css.btnAtivar}
+                                    onClick={() => abrirModalBloqueio(
+                                        {
+                                            id: doador[0],
+                                            nome: doador[1],
+                                            ativo: doador[15] === 1
+                                        },
+                                        'doador'
+                                    )}
+                                >
+                                    {doador[15] === 1 ? 'Bloquear Doador' : 'Desbloquear Doador'}
+                                </button>
+
+                                {/* EXCLUIR só se estiver bloqueado/inativo */}
+                                {doador[15] === 0 && (
+                                    <button
+                                        className={css.btnExcluir}
+                                        onClick={() => confirmarExcluirDoador(doador)}
+                                    >
+                                        Excluir Doador
+                                    </button>
+                                )}
+
                             </div>
                         </div>
                     ))}

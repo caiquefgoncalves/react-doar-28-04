@@ -385,7 +385,7 @@
 @media (max-width: 425px) {
     .conteudo {
         margin-top: 1.5rem;
-        padding: 12px 10px;
+        padding: 30px;
         width: 100%;
         max-width: 100%;
         overflow-x: hidden;
@@ -511,7 +511,6 @@
 /* Mobile pequeno - 320px */
 @media (max-width: 320px) {
     .conteudo {
-        padding: 10px 6px;
         width: 100%;
         max-width: 100%;
         overflow-x: hidden;

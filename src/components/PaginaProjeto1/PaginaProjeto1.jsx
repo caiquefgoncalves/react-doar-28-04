@@ -18,8 +18,21 @@ export default function PaginaProjeto1({ api }) {
     const [paginaAtualizacoes, setPaginaAtualizacoes] = useState(0);
     const atualizacoesPorPagina = 2;
 
+    // Detectar se é mobile
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 425);
+
+    // Quantidade de itens por página (dinâmico)
+    const atualizacoesPorPaginaResponsivo = isMobile ? 1 : 2;
+
     useEffect(() => {
         buscarDados();
+
+        // Listener para redimensionamento
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 425);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }, [id]);
 
     async function buscarDados() {
@@ -42,11 +55,11 @@ export default function PaginaProjeto1({ api }) {
         finally { setLoading(false); }
     }
 
-    const totalPaginasAtualizacoes = Math.ceil(atualizacoes.length / atualizacoesPorPagina);
+    const totalPaginasAtualizacoes = Math.ceil(atualizacoes.length / atualizacoesPorPaginaResponsivo);
 
     const atualizacoesPaginadas = atualizacoes.slice(
-        paginaAtualizacoes * atualizacoesPorPagina,
-        (paginaAtualizacoes + 1) * atualizacoesPorPagina
+        paginaAtualizacoes * atualizacoesPorPaginaResponsivo,
+        (paginaAtualizacoes + 1) * atualizacoesPorPaginaResponsivo
     );
 
     const proximaPagina = () => {
@@ -62,15 +75,27 @@ export default function PaginaProjeto1({ api }) {
     };
 
     if (loading) return (
-        <section className={css.secao}><MenuLateral/><div className={css.conteudo}><p>Carregando...</p></div></section>
+        <section className={css.secao}>
+            <div className={css.menulateral}>
+                <MenuLateral/>
+            </div>
+            <div className={css.conteudo}><p>Carregando...</p></div>
+        </section>
     );
     if (!projeto) return (
-        <section className={css.secao}><MenuLateral/><div className={css.conteudo}><p>Projeto não encontrado</p></div></section>
+        <section className={css.secao}>
+            <div className={css.menulateral}>
+                <MenuLateral/>
+            </div>
+            <div className={css.conteudo}><p>Projeto não encontrado</p></div>
+        </section>
     );
 
     return (
         <section className={css.secao}>
-            <MenuLateral/>
+            <div className={css.menulateral}>
+                <MenuLateral/>
+            </div>
             <div className={css.conteudo}>
 
                 <div className={css.layoutDuasColunas}>
@@ -90,9 +115,9 @@ export default function PaginaProjeto1({ api }) {
                                 />
                             )}
                             <div>
-                                <h1 className={css.tituloProjeto}>{projeto.titulo}</h1>
+                                <h1 className={css.nome}>{projeto.titulo}</h1>
                                 {ong && (
-                                    <p className={css.desenvolvidoPor}>
+                                    <p className={css.descBreve}>
                                         Projeto desenvolvido pela ONG <Link to={`/ong/${ong.id}`}>{ong.nome}</Link>
                                     </p>
                                 )}
@@ -102,7 +127,7 @@ export default function PaginaProjeto1({ api }) {
                         {/* Sobre Nós */}
                         <div className={css.secaoBox}>
                             <p className={css.sobrenos}>Sobre nós</p>
-                            <p className={css.descricao}>{projeto.descricao}</p>
+                            <p className={css.descLonga}>{projeto.descricao}</p>
                         </div>
 
                         {/* Informações */}
@@ -138,7 +163,7 @@ export default function PaginaProjeto1({ api }) {
                                         <p className={css.texto}>{qtd} atualizações</p>
                                     )}
                                 </div>
-                                <div className={css.atualizacoesLista}>
+                                <div className={css.projetosLista}>
                                     {atualizacoesPaginadas.map(att => (
                                         <div key={att.id} className={css.atualizacao}>
                                             {att.foto && (
@@ -154,12 +179,10 @@ export default function PaginaProjeto1({ api }) {
                                             <h3 className={css.attTitulo}>{att.titulo}</h3>
                                             {att.texto && (
                                                 <p className={css.attTexto}>
-                                                    {/* Só corta e coloca "..." se o texto for maior que 100 E não estiver aberto */}
                                                     {idsAbertos === att.id || att.texto.length <= 100
                                                         ? att.texto
                                                         : att.texto.substring(0, 100) + "..."}
 
-                                                    {/* O botão só aparece se o texto for maior que 100 caracteres */}
                                                     {att.texto.length > 100 && (
                                                         <button
                                                             onClick={() => setIdsAbertos(idsAbertos === att.id ? null : att.id)}

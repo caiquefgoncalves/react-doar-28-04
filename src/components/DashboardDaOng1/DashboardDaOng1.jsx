@@ -178,7 +178,8 @@ export default function DashboardDaOng1({api}) {
                     </div>
                 )}
 
-                <div className={css.Titulo}><Titulo titulo={`Olá,`} cor={'preto'} span={nomeOng} corSpan={'laranja-span'}/></div>
+
+                <div className={css.Titulo}><Titulo titulo={`Olá,`} cor={'saudacao'} span={nomeOng} corSpan={'laranja-span'}/></div>
                 <p className={css.acoesRapidas}>Ações rápidas</p>
                 <div className={css.acoes}>
                     <Acoes cor={'amarelo'} texto={'Editar Perfil'} pagina={`/editarOng/${idOng}`}/>

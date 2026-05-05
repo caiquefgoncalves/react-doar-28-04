@@ -18,7 +18,6 @@
 }
 
 .cabecalho {
-    display: grid;
     grid-template-columns: 2fr 1fr 1fr;
     background-color: #fff;
     padding: 15px 20px;
@@ -26,6 +25,10 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.informacoes{
+    display: flex;
+    gap: 17rem;
+}
 .colunaNome {
     text-align: left;
     font-weight: 400;
@@ -74,10 +77,10 @@
 
 @media (max-width: 480px) {
     .cabecalho {
-        grid-template-columns: 1fr;
-        text-align: center;
+        display: none;
     }
     .colunaData {
         display: none;
     }
+
 }

@@ -146,6 +146,8 @@ span {
 }
 
 
+
+
 @media (max-width: 768px) {
     .secao { flex-direction: column; }
     .conteudo { padding: 15px; }

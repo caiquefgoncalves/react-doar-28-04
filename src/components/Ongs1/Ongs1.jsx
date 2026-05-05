@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import MenuLateral from "../MenuLateral/MenuLateral.jsx";
 import Titulo from "../Titulo/Titulo.jsx";
 import css from './Ongs1.module.css'
-import Curtida from "../Curtida/Curtida.jsx";
+import BotaoSeguir from "../BotaoSeguir/BotaoSeguir.jsx";
 
 export default function Ongs({api}) {
     const api_url = api
@@ -13,15 +13,41 @@ export default function Ongs({api}) {
     const [loading, setLoading] = useState(true);
     const [busca, setBusca] = useState('');
     const [categoriaFiltro, setCategoriaFiltro] = useState('todas');
+    const [usuarioLogado, setUsuarioLogado] = useState(null);
+    const [tipoUsuario, setTipoUsuario] = useState(null);
 
     useEffect(() => {
         buscarOngs();
+        verificarUsuarioLogado();
     }, []);
+
+    async function verificarUsuarioLogado() {
+        try {
+            const response = await fetch(`${api_url}/meus_dados`, {
+                credentials: 'include'
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setUsuarioLogado(data.usuario);
+
+                // Buscar tipo do usuário
+                const token = localStorage.getItem('token');
+                if (token) {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    setTipoUsuario(payload.tipo);
+                }
+            }
+        } catch (error) {
+            console.error('Erro ao verificar usuário:', error);
+        }
+    }
 
     async function buscarOngs() {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${api_url}/listar_ongs_publicas?token=${token || ''}`, { credentials: 'include' });
+            const response = await fetch(`${api_url}/listar_ongs_publicas?token=${token || ''}`, {
+                credentials: 'include'
+            });
             if (response.ok) {
                 const data = await response.json();
                 if (data.ongs) {
@@ -29,8 +55,12 @@ export default function Ongs({api}) {
                     setOngs(data.ongs);
                 }
             }
-        } catch (error) { console.error('Erro:', error); }
-        finally { setLoading(false); }
+        } catch (error) {
+            console.error('Erro:', error);
+        }
+        finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
@@ -50,24 +80,36 @@ export default function Ongs({api}) {
     const categorias = ['todas', ...new Set(todasOngs.map(o => o.categoria).filter(Boolean))];
 
     if (loading) return (
-        <section className={css.secao}><MenuLateral/><div className={css.conteudo}><p>Carregando...</p></div></section>
+        <section className={css.secao}>
+            <MenuLateral/>
+            <div className={css.conteudo}>
+                <p>Carregando...</p>
+            </div>
+        </section>
     );
 
     return (
         <section className={css.secao}>
             <MenuLateral/>
             <div className={css.conteudo}>
-
-
-
                 <div className={css.barraTopo}>
-                        <div className={css.buscaInput}>
-                            <input type="text" placeholder="Buscar por ONG..." value={busca} onChange={(e) => setBusca(e.target.value)} className={css.inputBusca} />
-                            <button className={css.btnBuscar}></button>
-                        </div>
+                    <div className={css.buscaInput}>
+                        <input
+                            type="text"
+                            placeholder="Buscar por ONG..."
+                            value={busca}
+                            onChange={(e) => setBusca(e.target.value)}
+                            className={css.inputBusca}
+                        />
+                        <button className={css.btnBuscar}></button>
+                    </div>
                     <div className={css.filtro}>
                         <span>Filtrar por:</span>
-                        <select value={categoriaFiltro} onChange={(e) => setCategoriaFiltro(e.target.value)} className={css.selectFiltro}>
+                        <select
+                            value={categoriaFiltro}
+                            onChange={(e) => setCategoriaFiltro(e.target.value)}
+                            className={css.selectFiltro}
+                        >
                             <option value="todas">Todas</option>
                             {categorias.filter(c => c !== 'todas').map(cat => (
                                 <option key={cat} value={cat}>{cat}</option>
@@ -76,30 +118,45 @@ export default function Ongs({api}) {
                     </div>
                 </div>
 
-                <p style={{ fontSize: '14px', color: '#666', margin: '0 0 15px 0' }}>{ongs.length} ONG(s) encontrada(s)</p>
+                <p style={{ fontSize: '14px', color: '#666', margin: '0 0 15px 0' }}>
+                    {ongs.length} ONG(s) encontrada(s)
+                </p>
 
                 <div className={css.cardsContainer}>
                     {ongs.length === 0 ? (
                         <p className={css.vazio}>Nenhuma ONG encontrada.</p>
                     ) : (
                         ongs.map(ong => (
-                            <Link to={`/ong/${ong.id}`} key={ong.id} className={css.card}>
-                                <img
-                                    src={ong.foto ? `${api_url}/uploads/Usuarios/${ong.foto}` : '/ong-icon.png'}
-                                    alt={ong.nome}
-                                    className={css.cardImagem}
-                                    onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.currentTarget.src = '/sem_imagem.webp';
-                                    }}
-                                />
-                                <div className={css.cardInfo}>
-                                    <h3 className={css.cardNome}>{ong.nome}</h3>
-                                    <p className={css.cardDesc}>{ong.descricao_breve?.substring(0, 80) || 'Sem descrição'}...</p>
-                                    <span className={css.cardCategoria}>{ong.categoria || 'ONG'}</span>
-                                </div>
-                                <Curtida/>
-                            </Link>
+                            <div key={ong.id} className={css.cardWrapper}>
+                                <Link to={`/ong/${ong.id}`} className={css.card}>
+                                    <img
+                                        src={ong.foto ? `${api_url}/uploads/Usuarios/${ong.foto}` : '/ong-icon.png'}
+                                        alt={ong.nome}
+                                        className={css.cardImagem}
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.currentTarget.src = '/sem_imagem.webp';
+                                        }}
+                                    />
+                                    <div className={css.cardInfo}>
+                                        <h3 className={css.cardNome}>{ong.nome}</h3>
+                                        <p className={css.cardDesc}>
+                                            {ong.descricao_breve?.substring(0, 80) || 'Sem descrição'}...
+                                        </p>
+                                        <span className={css.cardCategoria}>
+                                            {ong.categoria || 'ONG'}
+                                        </span>
+                                    </div>
+                                </Link>
+                                {tipoUsuario === 1 && (
+                                    <div className={css.botaoSeguirContainer}>
+                                        <BotaoSeguir
+                                            idOng={ong.id}
+                                            apiUrl={api_url}
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         ))
                     )}
                 </div>
